@@ -31,6 +31,14 @@ class L2Book:
         self.last_update_id: int | None = None
         self.ready: bool = False
 
+    def copy(self) -> "L2Book":
+        other = L2Book()
+        other.bids = dict(self.bids)
+        other.asks = dict(self.asks)
+        other.last_update_id = self.last_update_id
+        other.ready = self.ready
+        return other
+
     def clear(self) -> None:
         self.bids.clear()
         self.asks.clear()

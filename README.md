@@ -29,13 +29,28 @@ Light hard deps only: `numpy`, `pandas`, `pyarrow`, `pyyaml`.
 
 ```bash
 python -m a4ob.cli smoke --config configs/sealed.yaml
-# or: python -m a4ob smoke ...
 python -m a4ob.cli eval --config configs/sealed.yaml   # smoke-backed stub
 ```
 
-Smoke will prefer `smoke.date/hour` in the config (default BTCUSDC `2026-08-01/00`). If that hour has no snapshot rows, it auto-selects the first sealed-window hour that does, rebuilds L2, samples a 1s top-20 panel, computes baseline imbalance + mid forward returns, and writes:
+Smoke prefers an existing day panel under `panels/` when present; otherwise it rebuilds one hour (config `smoke.date/hour`, with fallback to the first hour that has a snapshot).
 
-`experiments/smoke_<symbol>_<date>_<hour>_<utc>/report.md`
+## Build a day panel (M2)
+
+```bash
+python -m a4ob.cli build-panel --symbol BTCUSDC --date 2026-08-01
+# debug one hour:
+python -m a4ob.cli build-panel --symbol BTCUSDC --date 2026-08-01 --hour 21
+python -m a4ob.cli eval --symbol BTCUSDC --date 2026-08-01
+```
+
+Output (gitignored under `panels/`):
+
+```
+panels/dt=1s/K=20/symbol=BTCUSDC/date=2026-08-01/panel.parquet
+panels/dt=1s/K=20/symbol=BTCUSDC/date=2026-08-01/manifest.json
+```
+
+**Cross-hour policy (`CARRY_FORWARD_AFTER_SNAPSHOT`):** skip missing hours and update-only hours before the first snapshot; after the book is ready, carry the in-memory L2 book into later hours (including update-only); a later snapshot resyncs.
 
 ## Factor Spec (YAML contract — target shape)
 

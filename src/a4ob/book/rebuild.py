@@ -23,6 +23,34 @@ class RebuildStats:
     last_event_time_ms: int | None = None
     notes: list[str] = field(default_factory=list)
 
+    def merge(self, other: "RebuildStats") -> None:
+        self.n_rows += other.n_rows
+        self.n_snapshot_groups += other.n_snapshot_groups
+        self.n_update_groups += other.n_update_groups
+        self.n_applied_updates += other.n_applied_updates
+        self.n_skipped_before_ready += other.n_skipped_before_ready
+        self.n_gaps += other.n_gaps
+        self.n_crossed += other.n_crossed
+        if self.first_ready_event_time_ms is None:
+            self.first_ready_event_time_ms = other.first_ready_event_time_ms
+        if other.last_event_time_ms is not None:
+            self.last_event_time_ms = other.last_event_time_ms
+        remain = 20 - len(self.notes)
+        if remain > 0:
+            self.notes.extend(other.notes[:remain])
+
+
+@dataclass
+class CarryState:
+    """Book state carried across hour boundaries after the first ready snapshot."""
+
+    book: L2Book
+    prev_u: int | None = None
+    awaiting_bridge: bool = False
+    next_tick_ms: int | None = None
+    last_state: dict[str, float] | None = None
+    last_event_time_ms: int | None = None
+
 
 def _as_optional_int(val: object) -> int | None:
     if val is None:
@@ -83,24 +111,48 @@ def sample_top_k_timeline(
     *,
     dt_ms: int = 1000,
     top_k: int = 20,
-) -> tuple[pd.DataFrame, RebuildStats]:
+    carry: CarryState | None = None,
+) -> tuple[pd.DataFrame, RebuildStats, CarryState]:
     """
     Stream-rebuild and sample the book on a fixed clock after first ready snapshot.
 
     Sampling rule: at each clock tick ``t``, use the last book state with
     ``event_time_ms <= t`` (asof / causal).
+
+    If ``carry`` is provided (day builder), continue from that in-memory book
+    instead of starting empty — used to chain update-only hours after a snapshot.
     """
     stats = RebuildStats(n_rows=len(df))
-    if df.empty:
-        return pd.DataFrame(), stats
+    if carry is None:
+        book = L2Book()
+        prev_u: int | None = None
+        awaiting_bridge = False
+        next_tick: int | None = None
+        last_state: dict[str, float] | None = None
+        last_event_time: int | None = None
+    else:
+        book = carry.book
+        prev_u = carry.prev_u
+        awaiting_bridge = carry.awaiting_bridge
+        next_tick = carry.next_tick_ms
+        last_state = dict(carry.last_state) if carry.last_state is not None else None
+        last_event_time = carry.last_event_time_ms
+        if book.ready and stats.first_ready_event_time_ms is None:
+            # Already ready from a prior hour
+            stats.first_ready_event_time_ms = last_event_time
 
-    book = L2Book()
-    prev_u: int | None = None
-    awaiting_bridge: bool = False  # True until first update after a snapshot
+    if df.empty:
+        out_carry = CarryState(
+            book=book,
+            prev_u=prev_u,
+            awaiting_bridge=awaiting_bridge,
+            next_tick_ms=next_tick,
+            last_state=last_state,
+            last_event_time_ms=last_event_time,
+        )
+        return pd.DataFrame(), stats, out_carry
+
     rows: list[dict] = []
-    next_tick: int | None = None
-    last_state: dict[str, float] | None = None
-    last_event_time: int | None = None
 
     gids = _event_group_ids(df)
     sides = df["side"].astype(str).to_numpy()
@@ -144,6 +196,7 @@ def sample_top_k_timeline(
             if book.ready:
                 if stats.first_ready_event_time_ms is None:
                     stats.first_ready_event_time_ms = event_time
+                if next_tick is None:
                     next_tick = ((event_time // dt_ms) + 1) * dt_ms
                 last_state = book.top_k(top_k)
                 last_event_time = event_time
@@ -163,7 +216,6 @@ def sample_top_k_timeline(
 
         if u_i is not None:
             if awaiting_bridge:
-                # Binance bridge: U <= lastUpdateId <= u, or pu == lastUpdateId.
                 snap_id = book.last_update_id
                 bridged = False
                 if snap_id is not None:
@@ -173,7 +225,6 @@ def sample_top_k_timeline(
                     elif pu_i is not None and pu_i == s_i:
                         bridged = True
                     elif u_i < s_i:
-                        # Stale event before snapshot tip — skip levels.
                         stats.n_skipped_before_ready += 1
                         continue
                 if snap_id is not None and not bridged:
@@ -212,14 +263,20 @@ def sample_top_k_timeline(
     panel = pd.DataFrame(rows)
     if not panel.empty:
         panel = panel.replace([np.inf, -np.inf], np.nan)
-    return panel, stats
+
+    out_carry = CarryState(
+        book=book,
+        prev_u=prev_u,
+        awaiting_bridge=awaiting_bridge,
+        next_tick_ms=next_tick,
+        last_state=last_state,
+        last_event_time_ms=last_event_time,
+    )
+    return panel, stats, out_carry
 
 
 def rebuild_events(df: pd.DataFrame) -> tuple[L2Book, RebuildStats]:
     """Rebuild L2 without emitting a dense panel (final book + stats)."""
-    # Reuse sampler with huge dt so at most one tick is emitted; we only need stats/book.
-    panel, stats = sample_top_k_timeline(df, dt_ms=10**15, top_k=1)
+    panel, stats, carry = sample_top_k_timeline(df, dt_ms=10**15, top_k=1)
     _ = panel
-    # Re-sample is wasteful for final book; acceptable for M0 stub API.
-    book = L2Book()
-    return book, stats
+    return carry.book, stats
