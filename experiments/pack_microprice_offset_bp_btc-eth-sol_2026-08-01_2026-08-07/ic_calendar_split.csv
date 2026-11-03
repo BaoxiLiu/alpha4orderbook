@@ -1,0 +1,13 @@
+spec,factor,horizon_s,split,n_days,mean_rank_ic,mean_n
+microprice_offset_bp,microprice_offset_bp,1,train,5,0.2557658639991517,13358.733333333334
+microprice_offset_bp,microprice_offset_bp,1,test,2,0.26165946529633427,37364.833333333336
+microprice_offset_bp,microprice_offset_bp,5,train,5,0.22157030850002274,13354.733333333334
+microprice_offset_bp,microprice_offset_bp,5,test,2,0.23116354857263866,37360.833333333336
+microprice_offset_bp,microprice_offset_bp,10,train,5,0.17247703821413646,13349.733333333334
+microprice_offset_bp,microprice_offset_bp,10,test,2,0.1879777133538254,37355.833333333336
+microprice_offset_bp,microprice_offset_bp,30,train,5,0.10115343488324019,13329.733333333334
+microprice_offset_bp,microprice_offset_bp,30,test,2,0.1159190860712882,37335.833333333336
+microprice_offset_bp,microprice_offset_bp,60,train,5,0.06683349761335716,13299.733333333334
+microprice_offset_bp,microprice_offset_bp,60,test,2,0.06825519044682646,37305.833333333336
+microprice_offset_bp,microprice_offset_bp,300,train,5,0.036977276879904014,13059.733333333334
+microprice_offset_bp,microprice_offset_bp,300,test,2,0.02937905672797142,37065.833333333336
