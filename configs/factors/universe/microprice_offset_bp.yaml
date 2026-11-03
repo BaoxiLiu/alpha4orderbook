@@ -1,0 +1,29 @@
+# Universe Spec — microprice_offset_bp
+# Catalog microprice_offset_bp
+factor:
+  name: microprice_offset_bp
+  version: "0.1.0"
+  frequency: 1s
+  description: >
+    Catalog microprice_offset_bp
+
+  output:
+    - col: microprice_offset_bp
+      dtype: float64
+
+  requires:
+    panel: [best_bid, best_ask, best_bid_sz, best_ask_sz, mid]
+
+  steps:
+    - id: microprice_offset_bp
+      op: microprice_offset_bp
+      params: { out: microprice_offset_bp }
+      outputs: [microprice_offset_bp]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: microprice_offset_bp

@@ -1,0 +1,29 @@
+# Universe Spec — depth_symmetry_l5
+# 1-|imb_l5|
+factor:
+  name: depth_symmetry_l5
+  version: "0.1.0"
+  frequency: 1s
+  description: >
+    1-|imb_l5|
+
+  output:
+    - col: depth_symmetry_l5
+      dtype: float64
+
+  requires:
+    panel: [bid_sz_0, bid_sz_1, bid_sz_2, bid_sz_3, bid_sz_4, ask_sz_0, ask_sz_1, ask_sz_2, ask_sz_3, ask_sz_4]
+
+  steps:
+    - id: depth_symmetry_l5
+      op: depth_symmetry
+      params: { levels: 5, out: depth_symmetry_l5 }
+      outputs: [depth_symmetry_l5]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: depth_symmetry_l5

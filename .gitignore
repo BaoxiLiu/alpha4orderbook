@@ -35,3 +35,7 @@ experiments/*/panel_*.parquet
 credentials*
 
 experiments/**/scored_panel.parquet
+
+# Dual-library run dumps (keep summaries tracked)
+library/runs/**/layering_by_day.csv
+library/runs/**/ic_by_day.csv

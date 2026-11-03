@@ -1,0 +1,29 @@
+# Universe Spec — bid_outer_share_l5
+# Bid outer share L5
+factor:
+  name: bid_outer_share_l5
+  version: "0.1.0"
+  frequency: 1s
+  description: >
+    Bid outer share L5
+
+  output:
+    - col: bid_outer_share_l5
+      dtype: float64
+
+  requires:
+    panel: [bid_sz_0, bid_sz_1, bid_sz_2, bid_sz_3, bid_sz_4]
+
+  steps:
+    - id: bid_outer_share_l5
+      op: bid_outer_share
+      params: { levels: 5, outer_from: 2, out: bid_outer_share_l5 }
+      outputs: [bid_outer_share_l5]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: bid_outer_share_l5

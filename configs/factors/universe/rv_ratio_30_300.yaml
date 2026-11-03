@@ -1,0 +1,29 @@
+# Universe Spec — rv_ratio_30_300
+# rv30/rv300
+factor:
+  name: rv_ratio_30_300
+  version: "0.1.0"
+  frequency: 1s
+  description: >
+    rv30/rv300
+
+  output:
+    - col: rv_ratio_30_300
+      dtype: float64
+
+  requires:
+    panel: [mid]
+
+  steps:
+    - id: rv_ratio_30_300
+      op: rv_ratio
+      params: { short: 30, long: 300, out: rv_ratio_30_300 }
+      outputs: [rv_ratio_30_300]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: rv_ratio_30_300

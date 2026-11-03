@@ -1,0 +1,29 @@
+# Universe Spec — range_position_60s
+# 60s range position
+factor:
+  name: range_position_60s
+  version: "0.1.0"
+  frequency: 1s
+  description: >
+    60s range position
+
+  output:
+    - col: range_position_60s
+      dtype: float64
+
+  requires:
+    panel: [mid]
+
+  steps:
+    - id: range_position_60s
+      op: range_position
+      params: { window: 60, out: range_position_60s }
+      outputs: [range_position_60s]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: range_position_60s

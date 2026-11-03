@@ -152,6 +152,18 @@ third_party/NOTES.md
 experiments/          # run outputs (panel parquet gitignored)
 ```
 
+## Dual library (Phase 1)
+
+Universe ranking + Core orthogonality on panel-ready Specs:
+
+```bash
+python -m a4ob.cli rank-universe \
+  --out library/runs/universe_btc-eth-sol_2026-08-01_2026-08-07
+python -m a4ob.cli build-core --out library
+```
+
+Artifacts: `library/universe_leaderboard.html`, `library/core_v0.yaml`, `configs/scoring.yaml`, `configs/factors/universe/`.
+
 ### Reports & layering
 
 - `run-eval` / `run-eval-pack` write `report.md` and `report.html` side by side.

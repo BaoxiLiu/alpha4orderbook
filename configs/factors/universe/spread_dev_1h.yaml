@@ -1,0 +1,29 @@
+# Universe Spec — spread_dev_1h
+# spread_bp minus 1h median
+factor:
+  name: spread_dev_1h
+  version: "0.1.0"
+  frequency: 1s
+  description: >
+    spread_bp minus 1h median
+
+  output:
+    - col: spread_dev_1h
+      dtype: float64
+
+  requires:
+    panel: [mid, spread]
+
+  steps:
+    - id: spread_dev_1h
+      op: spread_dev
+      params: { window: 3600, out: spread_dev_1h }
+      outputs: [spread_dev_1h]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: spread_dev_1h

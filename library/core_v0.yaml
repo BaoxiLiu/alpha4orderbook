@@ -1,0 +1,151 @@
+schema_version: 1
+library: core
+version: v0
+built_at_utc: '2026-11-03T13:31:41.759498+00:00'
+method: greedy_abs_corr
+corr_threshold: 0.7
+n_universe: 23
+n_clusters: 15
+n_core: 15
+representatives:
+- l1_imbalance
+- microprice_mom_10s
+- depth_imb_10t
+- cont_ofi_panel_1s
+- bid_outer_share_l5
+- mid_return_1s
+- depth_slope_imb
+- ret_5s_bp
+- range_position_60s
+- bid_hhi_l5
+- rv_60s
+- spread_dev_1h
+- rv_ratio_30_300
+- depth_symmetry_l5
+- spread_bp
+clusters:
+- cluster_id: 0
+  representative: l1_imbalance
+  members:
+  - l1_imbalance
+  - microprice_offset_bp
+  - near_depth_imbalance
+  - imbalance_l3
+  - depth_imb_3t
+  - imbalance_l5
+  corr_to_rep:
+    l1_imbalance: 1.0
+    microprice_offset_bp: 0.9998079091241052
+    near_depth_imbalance: 0.8563505986115256
+    imbalance_l3: 0.829797812344023
+    depth_imb_3t: 0.8350571336770795
+    imbalance_l5: 0.7519259060850946
+  score: 0.7976042234673452
+- cluster_id: 1
+  representative: microprice_mom_10s
+  members:
+  - microprice_mom_10s
+  corr_to_rep:
+    microprice_mom_10s: 1.0
+  score: 0.7000128775067271
+- cluster_id: 2
+  representative: depth_imb_10t
+  members:
+  - depth_imb_10t
+  - imbalance_l10
+  corr_to_rep:
+    depth_imb_10t: 1.0
+    imbalance_l10: 0.8403609846283128
+  score: 0.6679360513564778
+- cluster_id: 3
+  representative: cont_ofi_panel_1s
+  members:
+  - cont_ofi_panel_1s
+  corr_to_rep:
+    cont_ofi_panel_1s: 1.0
+  score: 0.6402428483687708
+- cluster_id: 4
+  representative: bid_outer_share_l5
+  members:
+  - bid_outer_share_l5
+  corr_to_rep:
+    bid_outer_share_l5: 1.0
+  score: 0.5756788793706242
+- cluster_id: 5
+  representative: mid_return_1s
+  members:
+  - mid_return_1s
+  corr_to_rep:
+    mid_return_1s: 1.0
+  score: 0.5166718499218435
+- cluster_id: 6
+  representative: depth_slope_imb
+  members:
+  - depth_slope_imb
+  corr_to_rep:
+    depth_slope_imb: 1.0
+  score: 0.4922003897743143
+- cluster_id: 7
+  representative: ret_5s_bp
+  members:
+  - ret_5s_bp
+  corr_to_rep:
+    ret_5s_bp: 1.0
+  score: 0.4804834300718308
+- cluster_id: 8
+  representative: range_position_60s
+  members:
+  - range_position_60s
+  - ret_30s_bp
+  corr_to_rep:
+    range_position_60s: 1.0
+    ret_30s_bp: 0.7523470443985202
+  score: 0.4651622508863855
+- cluster_id: 9
+  representative: bid_hhi_l5
+  members:
+  - bid_hhi_l5
+  corr_to_rep:
+    bid_hhi_l5: 1.0
+  score: 0.4053735732183825
+- cluster_id: 10
+  representative: rv_60s
+  members:
+  - rv_60s
+  - rv_30s
+  corr_to_rep:
+    rv_60s: 1.0
+    rv_30s: 0.8578757104303052
+  score: 0.3685791527083102
+- cluster_id: 11
+  representative: spread_dev_1h
+  members:
+  - spread_dev_1h
+  corr_to_rep:
+    spread_dev_1h: 1.0
+  score: 0.3668560474416892
+- cluster_id: 12
+  representative: rv_ratio_30_300
+  members:
+  - rv_ratio_30_300
+  corr_to_rep:
+    rv_ratio_30_300: 1.0
+  score: 0.3501820368200936
+- cluster_id: 13
+  representative: depth_symmetry_l5
+  members:
+  - depth_symmetry_l5
+  corr_to_rep:
+    depth_symmetry_l5: 1.0
+  score: 0.3468222450341168
+- cluster_id: 14
+  representative: spread_bp
+  members:
+  - spread_bp
+  corr_to_rep:
+    spread_bp: 1.0
+  score: 0.3321674967731812
+notes:
+- Core v0 from Phase-1 Universe on BTC/ETH/SOL × 2026-08-01..07 panels.
+- Representative = highest composite score in each |ρ| cluster.
+- Not production-certified; mid-return IC only (no fees/markout).

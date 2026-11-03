@@ -1,0 +1,58 @@
+# Dual-library Phase 1 scorecard (Universe ranking)
+# Composite score is a weighted sum of normalized components in [0, 1] (higher better).
+# Missing metrics contribute 0 after optional soft penalty.
+
+version: "0.1.0"
+primary_horizon_s: 1
+secondary_horizons_s: [5, 10]
+
+weights:
+  # |mean Rank IC| at primary horizon (across symbols, equal-day then equal-symbol)
+  ic_primary: 0.35
+  # mean |IC| over secondary horizons (decay still useful → not zero)
+  ic_secondary: 0.10
+  # decay quality: IC_primary / max(|IC| over horizons) — prefer short-horizon alpha
+  # (slow factors still score via ic_secondary / layering)
+  decay_short_share: 0.10
+  # cross-symbol sign agreement + low dispersion of IC@primary
+  cross_symbol: 0.15
+  # calendar train/test: test IC same sign as train and |test|/|train| not collapsed
+  time_split: 0.15
+  # |long-short| mean mid return at primary horizon (TS quantiles), scaled
+  layering_ls: 0.10
+  # pairwise coverage vs labels at primary horizon
+  coverage: 0.05
+
+normalization:
+  # map |IC| via min(1, |ic| / ic_cap)
+  ic_cap: 0.35
+  # map |LS| mid return via min(1, |ls| / ls_cap)
+  ls_cap: 5.0e-5
+  # cross-symbol: 0.5 * sign_agree + 0.5 * (1 - min(1, std(ic)/std_cap))
+  ic_std_cap: 0.15
+  # time split: soft score
+  test_drop_cap: 0.75   # if |test|/|train| < this, linear penalty
+  min_obs: 30
+
+clustering:
+  method: greedy_abs_corr
+  # |Spearman ρ| of factor values (within-symbol, then average across symbols)
+  corr_threshold: 0.70
+  # representative = highest universe composite score in cluster
+  pick: max_score
+
+universe:
+  # Spec directory / explicit list filled by CLI
+  factors_glob: configs/factors/universe/*.yaml
+  symbols: [BTCUSDC, ETHUSDC, SOLUSDC]
+  start_date: "2026-08-01"
+  end_date: "2026-08-07"
+  train_days: 5
+  test_days: 2
+
+tick_size_usdc:
+  # used for tick-band depth factors (approx)
+  BTCUSDC: 0.1
+  ETHUSDC: 0.01
+  SOLUSDC: 0.01
+  default: 0.01

@@ -1,0 +1,29 @@
+# Universe Spec — cont_ofi_panel_1s
+# Panel Cont OFI approx
+factor:
+  name: cont_ofi_panel_1s
+  version: "0.1.0"
+  frequency: 1s
+  description: >
+    Panel Cont OFI approx
+
+  output:
+    - col: cont_ofi_panel_1s
+      dtype: float64
+
+  requires:
+    panel: [best_bid, best_ask, best_bid_sz, best_ask_sz, ts_ms]
+
+  steps:
+    - id: cont_ofi_panel_1s
+      op: cont_ofi_panel_1s
+      params: { out: cont_ofi_panel_1s }
+      outputs: [cont_ofi_panel_1s]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: cont_ofi_panel_1s

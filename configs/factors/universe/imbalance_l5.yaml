@@ -1,0 +1,29 @@
+# Universe Spec — imbalance_l5
+# Top-5 depth imbalance
+factor:
+  name: imbalance_l5
+  version: "0.1.0"
+  frequency: 1s
+  description: >
+    Top-5 depth imbalance
+
+  output:
+    - col: imbalance_l5
+      dtype: float64
+
+  requires:
+    panel: [bid_sz_0, bid_sz_1, bid_sz_2, bid_sz_3, bid_sz_4, ask_sz_0, ask_sz_1, ask_sz_2, ask_sz_3, ask_sz_4]
+
+  steps:
+    - id: imbalance_l5
+      op: imbalance_levels
+      params: { levels: 5, out: imbalance_l5 }
+      outputs: [imbalance_l5]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: imbalance_l5

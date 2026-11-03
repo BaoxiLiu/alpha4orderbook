@@ -1,0 +1,29 @@
+# Universe Spec — l1_imbalance
+# L1 size imbalance
+factor:
+  name: l1_imbalance
+  version: "0.1.0"
+  frequency: 1s
+  description: >
+    L1 size imbalance
+
+  output:
+    - col: l1_imbalance
+      dtype: float64
+
+  requires:
+    panel: [bid_sz_0, ask_sz_0]
+
+  steps:
+    - id: l1_imbalance
+      op: imbalance_levels
+      params: { levels: 1, out: l1_imbalance }
+      outputs: [l1_imbalance]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: l1_imbalance

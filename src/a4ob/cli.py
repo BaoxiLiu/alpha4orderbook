@@ -183,6 +183,50 @@ def _cmd_run_eval_pack(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_rank_universe(args: argparse.Namespace) -> int:
+    from .library.rank import rank_universe
+
+    symbols = (
+        [s.strip() for s in args.symbols.split(",") if s.strip()]
+        if args.symbols
+        else None
+    )
+    factors = (
+        [f.strip() for f in args.factors.split(",") if f.strip()]
+        if args.factors
+        else None
+    )
+    result = rank_universe(
+        factors=factors,
+        symbols=symbols,
+        start_date=args.start,
+        end_date=args.end,
+        scoring_path=args.scoring,
+        panels_root=args.panels_root,
+        out_dir=args.out,
+        train_days=args.train_days,
+        test_days=args.test_days,
+    )
+    print(json.dumps(result, indent=2, default=str))
+    print(f"\nLeaderboard: {result['leaderboard_html']}", file=sys.stderr)
+    return 0
+
+
+def _cmd_build_core(args: argparse.Namespace) -> int:
+    from .library.core import build_core
+
+    result = build_core(
+        ranking_csv=args.ranking,
+        corr_csv=args.corr,
+        scoring_path=args.scoring,
+        out_dir=args.out,
+        corr_threshold=args.corr_threshold,
+    )
+    print(json.dumps(result, indent=2, default=str))
+    print(f"\nCore: {result['core_yaml']}", file=sys.stderr)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="a4ob", description="alpha4orderbook CLI")
     sub = p.add_subparsers(dest="command", required=True)
@@ -302,6 +346,36 @@ def build_parser() -> argparse.ArgumentParser:
     pack.add_argument("--panels-root", default=None)
     pack.add_argument("--out", default=None, help="Experiment output directory")
     pack.set_defaults(func=_cmd_run_eval_pack)
+
+    ru = sub.add_parser(
+        "rank-universe",
+        help="Dual-library Phase 1: score/rank Universe factors on day panels",
+    )
+    ru.add_argument("--scoring", default=None, help="configs/scoring.yaml")
+    ru.add_argument(
+        "--factors",
+        default=None,
+        help="Comma-separated Spec paths (default: configs/factors/universe/*.yaml)",
+    )
+    ru.add_argument("--symbols", default=None, help="Comma-separated symbols")
+    ru.add_argument("--start", default=None, help="YYYY-MM-DD inclusive")
+    ru.add_argument("--end", default=None, help="YYYY-MM-DD inclusive")
+    ru.add_argument("--train-days", type=int, default=None)
+    ru.add_argument("--test-days", type=int, default=None)
+    ru.add_argument("--panels-root", default=None)
+    ru.add_argument("--out", default=None, help="Output directory under library/runs/")
+    ru.set_defaults(func=_cmd_rank_universe)
+
+    bc = sub.add_parser(
+        "build-core",
+        help="Dual-library Phase 1: cluster Universe → Core v0 representatives",
+    )
+    bc.add_argument("--scoring", default=None)
+    bc.add_argument("--ranking", default=None, help="universe_ranking.csv")
+    bc.add_argument("--corr", default=None, help="factor_corr_avg.csv")
+    bc.add_argument("--corr-threshold", type=float, default=None)
+    bc.add_argument("--out", default=None, help="default: library/")
+    bc.set_defaults(func=_cmd_build_core)
 
     return p
 

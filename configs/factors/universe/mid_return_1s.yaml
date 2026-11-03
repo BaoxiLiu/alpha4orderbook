@@ -1,0 +1,29 @@
+# Universe Spec — mid_return_1s
+# 1s mid return
+factor:
+  name: mid_return_1s
+  version: "0.1.0"
+  frequency: 1s
+  description: >
+    1s mid return
+
+  output:
+    - col: mid_return_1s
+      dtype: float64
+
+  requires:
+    panel: [mid]
+
+  steps:
+    - id: mid_return_1s
+      op: mid_return_1s
+      params: { lag: 1, out: mid_return_1s }
+      outputs: [mid_return_1s]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: mid_return_1s

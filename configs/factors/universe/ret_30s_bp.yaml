@@ -1,0 +1,29 @@
+# Universe Spec — ret_30s_bp
+# 30s mid return bp
+factor:
+  name: ret_30s_bp
+  version: "0.1.0"
+  frequency: 1s
+  description: >
+    30s mid return bp
+
+  output:
+    - col: ret_30s_bp
+      dtype: float64
+
+  requires:
+    panel: [mid]
+
+  steps:
+    - id: ret_30s_bp
+      op: ret_bp
+      params: { lag: 30, out: ret_30s_bp }
+      outputs: [ret_30s_bp]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: ret_30s_bp

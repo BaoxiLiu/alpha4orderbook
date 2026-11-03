@@ -1,0 +1,29 @@
+# Universe Spec — imbalance_l3
+# Top-3 depth imbalance
+factor:
+  name: imbalance_l3
+  version: "0.1.0"
+  frequency: 1s
+  description: >
+    Top-3 depth imbalance
+
+  output:
+    - col: imbalance_l3
+      dtype: float64
+
+  requires:
+    panel: [bid_sz_0, ask_sz_0, bid_sz_1, ask_sz_1, bid_sz_2, ask_sz_2]
+
+  steps:
+    - id: imbalance_l3
+      op: imbalance_l3
+      params: { out: imbalance_l3 }
+      outputs: [imbalance_l3]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: imbalance_l3

@@ -17,6 +17,7 @@ from .catalog_nine import (
     op_mid_return_1s,
     op_spread_bp,
 )
+from .panel_batch import BATCH_OPS
 
 
 # ---- safe expression eval (names → columns) ---------------------------------
@@ -137,3 +138,5 @@ OPS = {
     "cont_ofi_panel_1s": op_cont_ofi_panel_1s,
     "imbalance_l3": op_imbalance_l3,
 }
+# Dual-library Phase 1 panel batch ops (imbalance_levels, ret_bp, rv, depth, …)
+OPS.update(BATCH_OPS)

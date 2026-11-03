@@ -1,0 +1,29 @@
+# Universe Spec — rv_30s
+# 30s realized vol bp
+factor:
+  name: rv_30s
+  version: "0.1.0"
+  frequency: 1s
+  description: >
+    30s realized vol bp
+
+  output:
+    - col: rv_30s
+      dtype: float64
+
+  requires:
+    panel: [mid]
+
+  steps:
+    - id: rv_30s
+      op: realized_vol_bp
+      params: { window: 30, out: rv_30s }
+      outputs: [rv_30s]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: rv_30s
