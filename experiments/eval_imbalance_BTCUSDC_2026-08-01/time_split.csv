@@ -1,0 +1,4 @@
+split,frac,row_start,row_end,n,rank_ic,label,factor
+train,0.6,0,4774,4774,0.22272891480980955,ret_fwd_10s,imb_1
+val,0.2,4774,6365,1591,0.22888056637265497,ret_fwd_10s,imb_1
+test,0.2,6365,7957,1582,0.2857811625037122,ret_fwd_10s,imb_1

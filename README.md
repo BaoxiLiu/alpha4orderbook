@@ -52,59 +52,67 @@ panels/dt=1s/K=20/symbol=BTCUSDC/date=2026-08-01/manifest.json
 
 **Cross-hour policy (`CARRY_FORWARD_AFTER_SNAPSHOT`):** skip missing hours and update-only hours before the first snapshot; after the book is ready, carry the in-memory L2 book into later hours (including update-only); a later snapshot resyncs.
 
-## Factor Spec (YAML contract — target shape)
+## Factor Spec + run-eval (M3)
 
-Factors are declared as specs the Runner will resolve (M3). Multi-field / multi-step deps are first-class:
+Declare factors as YAML Specs under `configs/factors/`. The runner loads a day panel, applies Spec steps (panel ops / optional asof-join), scores Rank IC, and writes a report — **no full-depth tick replay**.
+
+```bash
+python -m a4ob.cli run-eval \
+  --config configs/sealed.yaml \
+  --factor configs/factors/imbalance.yaml \
+  --symbol BTCUSDC --date 2026-08-01
+
+python -m a4ob.cli run-eval \
+  --factor configs/factors/micro_combo.yaml \
+  --symbol BTCUSDC --date 2026-08-01
+```
+
+### Schema (implemented)
 
 ```yaml
 factor:
-  name: weighted_imbalance_ofi
+  name: micro_combo
   version: "0.1.0"
-  frequency: 1s          # must align to panel clock (or asof-join)
+  frequency: 1s
+  description: optional prose
   output:
-    - col: wimb_ofi
+    - col: micro_combo
       dtype: float64
-
-  # Fields required from the L1 panel (no full-depth replay)
   requires:
-    panel:
-      - bid_sz_0..bid_sz_19
-      - ask_sz_0..ask_sz_19
-      - mid
-      - best_bid
-      - best_ask
-    # Optional side inputs joined by (ts, symbol)
-    services:
-      - name: trades_1s
-        fields: [buy_qty, sell_qty]
-
-  # Multi-step compute graph (cached, idempotent — M5)
+    panel: [bid_sz_0, ask_sz_0, best_bid, best_ask, best_bid_sz, best_ask_sz, mid]
+    # optional external series asof-joined onto panel.ts_ms
+    # external:
+    #   - name: toy_signal
+    #     path: /path/to/signal.parquet
+    #     ts_col: ts_ms
+    #     value_col: signal
+    #     direction: backward
   steps:
-    - id: depth_imb
-      op: imbalance
-      params: { levels: 20, weights: linear }
-      inputs: { panel: [bid_sz_*, ask_sz_*] }
-      outputs: [imb20]
-    - id: ofi_core
-      op: cont_ofi
-      inputs: { panel: [bid_sz_0, ask_sz_0, best_bid, best_ask] }
-      outputs: [ofi]
+    - id: imb5
+      op: imbalance          # built-ins: imbalance, microprice_dev, spread_bps, expr, external_asof
+      params: { levels: 5, out: imb_5 }
+      outputs: [imb_5]
+    - id: mdev
+      op: microprice_dev
+      params: { out: micro_dev }
+      outputs: [micro_dev]
     - id: combine
       op: expr
-      expr: "0.7 * imb20 + 0.3 * tanh(ofi)"
-      inputs: [imb20, ofi]
-      outputs: [wimb_ofi]
-
+      expr: "0.7 * imb_5 + 0.3 * tanh(1000.0 * micro_dev)"
+      inputs: [imb_5, micro_dev]
+      outputs: [micro_combo]
   labels:
     price: mid
     horizons_seconds: [1, 5, 10, 30, 60, 300]
-
   eval:
-    metrics: [rank_ic, ic_decay]
-    splits: { method: time, fractions: [0.6, 0.2, 0.2] }
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: micro_combo
+    splits:
+      method: time
+      fractions: [0.6, 0.2, 0.2]
 ```
 
-Today only baseline `imbalance` is implemented as a panel transform (`a4ob.factors.baseline`). The Spec runner lands in M3.
+Shipped examples: `configs/factors/imbalance.yaml`, `configs/factors/micro_combo.yaml`.
 
 ## Layout
 

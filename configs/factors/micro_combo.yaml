@@ -1,0 +1,67 @@
+# Multi-field stub: imbalance + microprice deviation + simple combine.
+# Demonstrates multi-step Spec deps on several panel columns (still no tick replay).
+factor:
+  name: micro_combo
+  version: "0.1.0"
+  frequency: 1s
+  description: >
+    Combine top-5 imbalance with microprice deviation from mid.
+    External series path is optional (asof-join stub).
+
+  output:
+    - col: micro_combo
+      dtype: float64
+
+  requires:
+    panel:
+      - bid_sz_0
+      - ask_sz_0
+      - bid_sz_1
+      - ask_sz_1
+      - bid_sz_2
+      - ask_sz_2
+      - bid_sz_3
+      - ask_sz_3
+      - bid_sz_4
+      - ask_sz_4
+      - best_bid
+      - best_ask
+      - best_bid_sz
+      - best_ask_sz
+      - mid
+    # Optional external series (parquet/csv with ts_ms + value col).
+    # Uncomment and set path to enable asof-join into step `ext`.
+    # external:
+    #   - name: toy_signal
+    #     path: /path/to/signal.parquet
+    #     ts_col: ts_ms
+    #     value_col: signal
+    #     direction: backward
+
+  steps:
+    - id: imb5
+      op: imbalance
+      params: { levels: 5, out: imb_5 }
+      outputs: [imb_5]
+    - id: mdev
+      op: microprice_dev
+      params: { out: micro_dev }
+      outputs: [micro_dev]
+    - id: combine
+      op: expr
+      # Safe expression over prior step outputs / panel aliases.
+      expr: "0.7 * imb_5 + 0.3 * tanh(1000.0 * micro_dev)"
+      inputs: [imb_5, micro_dev]
+      outputs: [micro_combo]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: micro_combo
+    splits:
+      method: time
+      fractions: [0.6, 0.2, 0.2]
+      note: "Single-day stub — replace with multi-day splits in M4."

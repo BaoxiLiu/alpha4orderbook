@@ -1,0 +1,48 @@
+# Baseline size imbalance on the L1 panel (no LOB replay).
+factor:
+  name: imbalance
+  version: "0.1.0"
+  frequency: 1s
+  description: Top-N depth size imbalance (bid−ask)/(bid+ask).
+
+  output:
+    - col: imb_1
+      dtype: float64
+    - col: imb_5
+      dtype: float64
+
+  requires:
+    panel:
+      - bid_sz_0
+      - ask_sz_0
+      - bid_sz_1
+      - ask_sz_1
+      - bid_sz_2
+      - ask_sz_2
+      - bid_sz_3
+      - ask_sz_3
+      - bid_sz_4
+      - ask_sz_4
+      - mid
+
+  steps:
+    - id: imb_top1
+      op: imbalance
+      params: { levels: 1, out: imb_1 }
+      outputs: [imb_1]
+    - id: imb_top5
+      op: imbalance
+      params: { levels: 5, out: imb_5 }
+      outputs: [imb_5]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: imb_1
+    splits:
+      method: time
+      fractions: [0.6, 0.2, 0.2]
+      note: "Single-day stub — fractions applied on panel row order (UTC clock)."

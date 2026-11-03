@@ -1,0 +1,7 @@
+factor,label,n_panel,n_factor_nonnull,factor_coverage,n_pairwise,pairwise_coverage
+micro_combo,ret_fwd_1s,7957,7957,1.0,7956,0.9998743244941561
+micro_combo,ret_fwd_5s,7957,7957,1.0,7952,0.9993716224707805
+micro_combo,ret_fwd_10s,7957,7957,1.0,7947,0.9987432449415609
+micro_combo,ret_fwd_30s,7957,7957,1.0,7927,0.9962297348246827
+micro_combo,ret_fwd_60s,7957,7957,1.0,7897,0.9924594696493654
+micro_combo,ret_fwd_300s,7957,7957,1.0,7657,0.9622973482468267

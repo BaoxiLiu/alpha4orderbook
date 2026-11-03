@@ -33,3 +33,5 @@ experiments/*/panel_*.parquet
 # Secrets
 .env.*
 credentials*
+
+experiments/**/scored_panel.parquet

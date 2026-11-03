@@ -1,4 +1,4 @@
-"""CLI: ``python -m a4ob.cli smoke|eval|build-panel``."""
+"""CLI: ``python -m a4ob.cli smoke|eval|build-panel|run-eval``."""
 
 from __future__ import annotations
 
@@ -108,6 +108,22 @@ def _cmd_build_panel(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_run_eval(args: argparse.Namespace) -> int:
+    from .eval.run_eval import run_eval
+
+    result = run_eval(
+        factor_spec=args.factor,
+        symbol=args.symbol,
+        date=args.date,
+        config_path=args.config,
+        panel_path=args.panel,
+        out_dir=args.out,
+    )
+    print(json.dumps(result, indent=2, default=str))
+    print(f"\nReport: {result['report_path']}", file=sys.stderr)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="a4ob", description="alpha4orderbook CLI")
     sub = p.add_subparsers(dest="command", required=True)
@@ -159,6 +175,30 @@ def build_parser() -> argparse.ArgumentParser:
         help="Panels root (default: repo panels/)",
     )
     bp.set_defaults(func=_cmd_build_panel)
+
+    re_ = sub.add_parser(
+        "run-eval",
+        help="Factor Spec → day panel → Rank IC report (M3)",
+    )
+    re_.add_argument(
+        "--config",
+        default=None,
+        help="Path to YAML run config (default: configs/sealed.yaml)",
+    )
+    re_.add_argument(
+        "--factor",
+        required=True,
+        help="Factor Spec YAML (e.g. configs/factors/imbalance.yaml)",
+    )
+    re_.add_argument("--symbol", required=True)
+    re_.add_argument("--date", required=True, help="YYYY-MM-DD UTC")
+    re_.add_argument(
+        "--panel",
+        default=None,
+        help="Optional panel parquet (default: resolve day panel under panels/)",
+    )
+    re_.add_argument("--out", default=None, help="Experiment output directory")
+    re_.set_defaults(func=_cmd_run_eval)
 
     return p
 
