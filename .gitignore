@@ -17,7 +17,8 @@ venv/
 htmlcov/
 
 # Large / local artifacts
-panels/
+panels/*
+!panels/.gitkeep
 experiments/*/panel.parquet
 experiments/*/panel_*.parquet
 *.npz
