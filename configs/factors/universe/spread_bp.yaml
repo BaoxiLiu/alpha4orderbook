@@ -1,8 +1,8 @@
 # Universe Spec — spread_bp
-# Catalog spread_bp
+# Sources: spread_bp, micro:spread_bp
 factor:
   name: spread_bp
-  version: "0.1.0"
+  version: "0.2.0"
   frequency: 1s
   description: >
     Catalog spread_bp
@@ -12,7 +12,7 @@ factor:
       dtype: float64
 
   requires:
-    panel: [mid, spread, best_bid, best_ask]
+    panel: [mid, spread, best_bid, best_ask, best_bid_sz, best_ask_sz]
 
   steps:
     - id: spread_bp

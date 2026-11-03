@@ -1,8 +1,8 @@
 # Universe Spec — ret_5s_bp
-# 5s mid return bp
+# Sources: v3:D1
 factor:
   name: ret_5s_bp
-  version: "0.1.0"
+  version: "0.2.0"
   frequency: 1s
   description: >
     5s mid return bp

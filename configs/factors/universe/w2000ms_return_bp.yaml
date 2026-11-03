@@ -1,0 +1,29 @@
+# Universe Spec — w2000ms_return_bp
+# Sources: states:w2000ms_return_bp
+factor:
+  name: w2000ms_return_bp
+  version: "0.2.0"
+  frequency: 1s
+  description: >
+    Log mid return 2s bp
+
+  output:
+    - col: w2000ms_return_bp
+      dtype: float64
+
+  requires:
+    panel: [mid]
+
+  steps:
+    - id: w2000ms_return_bp
+      op: log_ret_bp
+      params: { lag: 2, out: w2000ms_return_bp }
+      outputs: [w2000ms_return_bp]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: w2000ms_return_bp

@@ -1,18 +1,18 @@
 # Universe Spec — microprice_mom_10s
-# Δ(micro-mid)/spread over 10s
+# Sources: v3:D13
 factor:
   name: microprice_mom_10s
-  version: "0.1.0"
+  version: "0.2.0"
   frequency: 1s
   description: >
-    Δ(micro-mid)/spread over 10s
+    Microprice spread-frac Δ10s
 
   output:
     - col: microprice_mom_10s
       dtype: float64
 
   requires:
-    panel: [best_bid, best_ask, best_bid_sz, best_ask_sz, mid, spread]
+    panel: [mid, spread, best_bid, best_ask, best_bid_sz, best_ask_sz]
 
   steps:
     - id: microprice_mom_10s

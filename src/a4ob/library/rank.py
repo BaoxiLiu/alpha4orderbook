@@ -45,12 +45,26 @@ def _discover_specs(factors: Iterable[str | Path] | None, glob_pat: str | None) 
     return paths
 
 
+_TICK_OPS = frozenset(
+    {
+        "depth_imb_ticks",
+        "depth_slope_imb",
+        "near_depth_imbalance",
+        "spread_ticks",
+        "side_width_ticks",
+        "spread_change_ticks",
+    }
+)
+
+
 def _inject_tick(spec: FactorSpec, tick: float) -> FactorSpec:
-    """Return a copy with tick_size set on depth-band ops for this symbol."""
+    """Return a copy with tick_size set on depth-band / tick-unit ops for this symbol."""
     new_steps: list[FactorStep] = []
     for step in spec.steps:
         params = dict(step.params)
-        if step.op in ("depth_imb_ticks", "depth_slope_imb", "near_depth_imbalance"):
+        if step.op in _TICK_OPS:
+            params["tick_size"] = float(tick)
+        if step.op == "factor_delta" and str(params.get("base_op", "")) in _TICK_OPS:
             params["tick_size"] = float(tick)
         new_steps.append(
             FactorStep(
@@ -138,15 +152,17 @@ def rank_universe(
             for c in labels.columns:
                 work[c] = labels[c]
 
-            factor_frame = pd.DataFrame({"ts_ms": work["ts_ms"]})
+            factor_cols: dict[str, pd.Series] = {}
             split = "train" if d in train_dates else ("test" if d in test_dates else "hold")
+            # Scorecard only needs LS at primary horizon; IC still uses full Spec horizons.
+            layer_horizons = [h0]
 
             for spec in specs:
                 try:
                     sp = _inject_tick(spec, tick)
                     scored, _ = apply_factor_spec(work, sp)
                     for fcol in sp.factor_cols:
-                        factor_frame[fcol] = scored[fcol]
+                        factor_cols[fcol] = scored[fcol]
                         for h in sp.horizons_seconds:
                             lab = f"ret_fwd_{h}s"
                             pair = scored[[fcol, lab]].dropna()
@@ -167,7 +183,7 @@ def rank_universe(
                         for lrow in layering_one_day(
                             scored,
                             fcol,
-                            sp.horizons_seconds,
+                            layer_horizons,
                             n_quantiles=n_quantiles,
                             min_obs=min_obs,
                         ):
@@ -190,10 +206,14 @@ def rank_universe(
                             "reason": f"{type(exc).__name__}: {exc}",
                         }
                     )
-            # keep factor columns only
-            keep = ["ts_ms"] + [c for c in factor_frame.columns if c != "ts_ms"]
-            if len(keep) > 1:
-                series_by_symbol[sym].append(factor_frame[keep])
+            if factor_cols:
+                factor_frame = pd.concat(
+                    [work["ts_ms"].rename("ts_ms"), pd.DataFrame(factor_cols)],
+                    axis=1,
+                )
+                # Downsample for correlation to keep memory/CPU bounded at ~111 factors.
+                step = max(1, len(factor_frame) // 8000)
+                series_by_symbol[sym].append(factor_frame.iloc[::step].reset_index(drop=True))
 
     detail = pd.DataFrame(ic_rows)
     if detail.empty:

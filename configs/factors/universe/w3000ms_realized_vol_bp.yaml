@@ -1,0 +1,29 @@
+# Universe Spec — w3000ms_realized_vol_bp
+# Sources: states:w3000ms_realized_vol_bp
+factor:
+  name: w3000ms_realized_vol_bp
+  version: "0.2.0"
+  frequency: 1s
+  description: >
+    RV 3s
+
+  output:
+    - col: w3000ms_realized_vol_bp
+      dtype: float64
+
+  requires:
+    panel: [mid]
+
+  steps:
+    - id: w3000ms_realized_vol_bp
+      op: realized_vol_bp
+      params: { window: 3, out: w3000ms_realized_vol_bp }
+      outputs: [w3000ms_realized_vol_bp]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: w3000ms_realized_vol_bp

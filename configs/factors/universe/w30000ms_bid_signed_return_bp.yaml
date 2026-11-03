@@ -1,0 +1,29 @@
+# Universe Spec — w30000ms_bid_signed_return_bp
+# Sources: micro:w30000ms_bid_signed_return_bp
+factor:
+  name: w30000ms_bid_signed_return_bp
+  version: "0.2.0"
+  frequency: 1s
+  description: >
+    Mid return 30s bp
+
+  output:
+    - col: w30000ms_bid_signed_return_bp
+      dtype: float64
+
+  requires:
+    panel: [mid]
+
+  steps:
+    - id: w30000ms_bid_signed_return_bp
+      op: ret_bp
+      params: { lag: 30, out: w30000ms_bid_signed_return_bp }
+      outputs: [w30000ms_bid_signed_return_bp]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: w30000ms_bid_signed_return_bp

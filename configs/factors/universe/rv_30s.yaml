@@ -1,8 +1,8 @@
 # Universe Spec — rv_30s
-# 30s realized vol bp
+# Sources: v3:D6
 factor:
   name: rv_30s
-  version: "0.1.0"
+  version: "0.2.0"
   frequency: 1s
   description: >
     30s realized vol bp

@@ -1,0 +1,29 @@
+# Universe Spec — w3000ms_spread_change_ticks
+# Sources: states:w3000ms_spread_change_ticks
+factor:
+  name: w3000ms_spread_change_ticks
+  version: "0.2.0"
+  frequency: 1s
+  description: >
+    Spread ticks Δ3s
+
+  output:
+    - col: w3000ms_spread_change_ticks
+      dtype: float64
+
+  requires:
+    panel: [mid, spread, best_bid, best_ask, best_bid_sz, best_ask_sz]
+
+  steps:
+    - id: w3000ms_spread_change_ticks
+      op: spread_change_ticks
+      params: { lag: 3, tick_size: 0.01, out: w3000ms_spread_change_ticks }
+      outputs: [w3000ms_spread_change_ticks]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: w3000ms_spread_change_ticks

@@ -1,0 +1,29 @@
+# Universe Spec — rv_60s_bp2
+# Sources: rv_60s_bp2
+factor:
+  name: rv_60s_bp2
+  version: "0.2.0"
+  frequency: 1s
+  description: >
+    Sum-sq bp mid Δ RV 60s
+
+  output:
+    - col: rv_60s_bp2
+      dtype: float64
+
+  requires:
+    panel: [mid]
+
+  steps:
+    - id: rv_60s_bp2
+      op: sum_sq_rv_bp
+      params: { window: 60, out: rv_60s_bp2 }
+      outputs: [rv_60s_bp2]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: rv_60s_bp2

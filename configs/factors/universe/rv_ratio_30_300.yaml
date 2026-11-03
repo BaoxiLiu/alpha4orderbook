@@ -1,8 +1,8 @@
 # Universe Spec — rv_ratio_30_300
-# rv30/rv300
+# Sources: v3:D9
 factor:
   name: rv_ratio_30_300
-  version: "0.1.0"
+  version: "0.2.0"
   frequency: 1s
   description: >
     rv30/rv300

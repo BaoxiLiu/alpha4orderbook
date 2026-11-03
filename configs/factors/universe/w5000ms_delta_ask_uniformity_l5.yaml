@@ -1,0 +1,29 @@
+# Universe Spec — w5000ms_delta_ask_uniformity_l5
+# Sources: micro:w5000ms_delta_ask_uniformity_l5
+factor:
+  name: w5000ms_delta_ask_uniformity_l5
+  version: "0.2.0"
+  frequency: 1s
+  description: >
+    Δ5s of ask_uniformity_l5
+
+  output:
+    - col: w5000ms_delta_ask_uniformity_l5
+      dtype: float64
+
+  requires:
+    panel: [mid, best_bid, best_ask, best_bid_sz, best_ask_sz, bid_px_0, ask_px_0, bid_sz_0, ask_sz_0, bid_px_1, ask_px_1, bid_sz_1, ask_sz_1, bid_px_2, ask_px_2, bid_sz_2, ask_sz_2, bid_px_3, ask_px_3, bid_sz_3, ask_sz_3, bid_px_4, ask_px_4, bid_sz_4, ask_sz_4, bid_px_5, ask_px_5, bid_sz_5, ask_sz_5, bid_px_6, ask_px_6, bid_sz_6, ask_sz_6, bid_px_7, ask_px_7, bid_sz_7, ask_sz_7, bid_px_8, ask_px_8, bid_sz_8, ask_sz_8, bid_px_9, ask_px_9, bid_sz_9, ask_sz_9, bid_px_10, ask_px_10, bid_sz_10, ask_sz_10, bid_px_11, ask_px_11, bid_sz_11, ask_sz_11, bid_px_12, ask_px_12, bid_sz_12, ask_sz_12, bid_px_13, ask_px_13, bid_sz_13, ask_sz_13, bid_px_14, ask_px_14, bid_sz_14, ask_sz_14, bid_px_15, ask_px_15, bid_sz_15, ask_sz_15, bid_px_16, ask_px_16, bid_sz_16, ask_sz_16, bid_px_17, ask_px_17, bid_sz_17, ask_sz_17, bid_px_18, ask_px_18, bid_sz_18, ask_sz_18, bid_px_19, ask_px_19, bid_sz_19, ask_sz_19]
+
+  steps:
+    - id: w5000ms_delta_ask_uniformity_l5
+      op: factor_delta
+      params: { base_op: side_uniformity, lag: 5, out: w5000ms_delta_ask_uniformity_l5, side: ask, levels: 5 }
+      outputs: [w5000ms_delta_ask_uniformity_l5]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: w5000ms_delta_ask_uniformity_l5

@@ -1,0 +1,29 @@
+# Universe Spec — w5000ms_bid_signed_return_bp
+# Sources: micro:w5000ms_bid_signed_return_bp
+factor:
+  name: w5000ms_bid_signed_return_bp
+  version: "0.2.0"
+  frequency: 1s
+  description: >
+    Mid return 5s bp
+
+  output:
+    - col: w5000ms_bid_signed_return_bp
+      dtype: float64
+
+  requires:
+    panel: [mid]
+
+  steps:
+    - id: w5000ms_bid_signed_return_bp
+      op: ret_bp
+      params: { lag: 5, out: w5000ms_bid_signed_return_bp }
+      outputs: [w5000ms_bid_signed_return_bp]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: w5000ms_bid_signed_return_bp

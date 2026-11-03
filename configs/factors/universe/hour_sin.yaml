@@ -1,0 +1,29 @@
+# Universe Spec — hour_sin
+# Sources: v3:E10
+factor:
+  name: hour_sin
+  version: "0.2.0"
+  frequency: 1s
+  description: >
+    UTC hour sin
+
+  output:
+    - col: hour_sin
+      dtype: float64
+
+  requires:
+    panel: [ts_ms]
+
+  steps:
+    - id: hour_sin
+      op: hour_cycle
+      params: { component: sin, out: hour_sin }
+      outputs: [hour_sin]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: hour_sin

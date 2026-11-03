@@ -1,8 +1,8 @@
 # Universe Spec — cont_ofi_panel_1s
-# Panel Cont OFI approx
+# Sources: cont_ofi_panel_1s
 factor:
   name: cont_ofi_panel_1s
-  version: "0.1.0"
+  version: "0.2.0"
   frequency: 1s
   description: >
     Panel Cont OFI approx
@@ -12,7 +12,7 @@ factor:
       dtype: float64
 
   requires:
-    panel: [best_bid, best_ask, best_bid_sz, best_ask_sz, ts_ms]
+    panel: [mid, spread, best_bid, best_ask, best_bid_sz, best_ask_sz]
 
   steps:
     - id: cont_ofi_panel_1s

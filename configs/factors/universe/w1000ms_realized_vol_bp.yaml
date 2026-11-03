@@ -1,0 +1,29 @@
+# Universe Spec — w1000ms_realized_vol_bp
+# Sources: micro:w1000ms_realized_vol_bp
+factor:
+  name: w1000ms_realized_vol_bp
+  version: "0.2.0"
+  frequency: 1s
+  description: >
+    RV over 1s
+
+  output:
+    - col: w1000ms_realized_vol_bp
+      dtype: float64
+
+  requires:
+    panel: [mid]
+
+  steps:
+    - id: w1000ms_realized_vol_bp
+      op: realized_vol_bp
+      params: { window: 1, out: w1000ms_realized_vol_bp }
+      outputs: [w1000ms_realized_vol_bp]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: w1000ms_realized_vol_bp

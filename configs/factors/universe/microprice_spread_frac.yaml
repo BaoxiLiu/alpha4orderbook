@@ -1,0 +1,29 @@
+# Universe Spec — microprice_spread_frac
+# Sources: micro:microprice_bid_signed_bp
+factor:
+  name: microprice_spread_frac
+  version: "0.2.0"
+  frequency: 1s
+  description: >
+    (micro−mid)/spread
+
+  output:
+    - col: microprice_spread_frac
+      dtype: float64
+
+  requires:
+    panel: [mid, spread, best_bid, best_ask, best_bid_sz, best_ask_sz]
+
+  steps:
+    - id: microprice_spread_frac
+      op: microprice_spread_frac
+      params: { out: microprice_spread_frac }
+      outputs: [microprice_spread_frac]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: microprice_spread_frac

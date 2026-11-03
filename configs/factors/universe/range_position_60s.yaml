@@ -1,11 +1,11 @@
 # Universe Spec — range_position_60s
-# 60s range position
+# Sources: v3:D14
 factor:
   name: range_position_60s
-  version: "0.1.0"
+  version: "0.2.0"
   frequency: 1s
   description: >
-    60s range position
+    Range position 60s
 
   output:
     - col: range_position_60s

@@ -1,0 +1,29 @@
+# Universe Spec — spread_ticks
+# Sources: micro:spread_ticks
+factor:
+  name: spread_ticks
+  version: "0.2.0"
+  frequency: 1s
+  description: >
+    Spread in ticks
+
+  output:
+    - col: spread_ticks
+      dtype: float64
+
+  requires:
+    panel: [mid, spread, best_bid, best_ask, best_bid_sz, best_ask_sz]
+
+  steps:
+    - id: spread_ticks
+      op: spread_ticks
+      params: { tick_size: 0.01, out: spread_ticks }
+      outputs: [spread_ticks]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: spread_ticks

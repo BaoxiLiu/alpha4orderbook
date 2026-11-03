@@ -1,0 +1,29 @@
+# Universe Spec — down_rv_30s
+# Sources: v3:D11
+factor:
+  name: down_rv_30s
+  version: "0.2.0"
+  frequency: 1s
+  description: >
+    Downside semi-vol 30s
+
+  output:
+    - col: down_rv_30s
+      dtype: float64
+
+  requires:
+    panel: [mid]
+
+  steps:
+    - id: down_rv_30s
+      op: half_rv_bp
+      params: { window: 30, direction: down, out: down_rv_30s }
+      outputs: [down_rv_30s]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: down_rv_30s

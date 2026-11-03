@@ -1,0 +1,29 @@
+# Universe Spec — jump_count_60s
+# Sources: v3:D15
+factor:
+  name: jump_count_60s
+  version: "0.2.0"
+  frequency: 1s
+  description: >
+    Jump count vs 4× med |ret|
+
+  output:
+    - col: jump_count_60s
+      dtype: float64
+
+  requires:
+    panel: [mid]
+
+  steps:
+    - id: jump_count_60s
+      op: jump_count
+      params: { window: 60, mult: 4.0, out: jump_count_60s }
+      outputs: [jump_count_60s]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: jump_count_60s
