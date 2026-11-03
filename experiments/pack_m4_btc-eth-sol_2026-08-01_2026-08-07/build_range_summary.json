@@ -1,0 +1,230 @@
+{
+  "symbols": [
+    "BTCUSDC",
+    "ETHUSDC",
+    "SOLUSDC"
+  ],
+  "start_date": "2026-08-01",
+  "end_date": "2026-08-07",
+  "wall_seconds_build_range": 3479.92,
+  "n_manifests": 21,
+  "n_ok": 21,
+  "results": [
+    {
+      "symbol": "BTCUSDC",
+      "date": "2026-08-01",
+      "status": "ok",
+      "n_rows": 7957,
+      "elapsed_seconds": 123.755,
+      "snapshot_hours": [
+        "21",
+        "22"
+      ]
+    },
+    {
+      "symbol": "BTCUSDC",
+      "date": "2026-08-02",
+      "status": "ok",
+      "n_rows": 7675,
+      "elapsed_seconds": 220.15,
+      "snapshot_hours": [
+        "21"
+      ]
+    },
+    {
+      "symbol": "BTCUSDC",
+      "date": "2026-08-03",
+      "status": "ok",
+      "n_rows": 8272,
+      "elapsed_seconds": 192.674,
+      "snapshot_hours": [
+        "21"
+      ]
+    },
+    {
+      "symbol": "BTCUSDC",
+      "date": "2026-08-04",
+      "status": "ok",
+      "n_rows": 24376,
+      "elapsed_seconds": 747.37,
+      "snapshot_hours": [
+        "17",
+        "19"
+      ]
+    },
+    {
+      "symbol": "BTCUSDC",
+      "date": "2026-08-05",
+      "status": "ok",
+      "n_rows": 18519,
+      "elapsed_seconds": 624.229,
+      "snapshot_hours": [
+        "18"
+      ]
+    },
+    {
+      "symbol": "BTCUSDC",
+      "date": "2026-08-06",
+      "status": "ok",
+      "n_rows": 19116,
+      "elapsed_seconds": 579.561,
+      "snapshot_hours": [
+        "18"
+      ]
+    },
+    {
+      "symbol": "BTCUSDC",
+      "date": "2026-08-07",
+      "status": "ok",
+      "n_rows": 55616,
+      "elapsed_seconds": 2719.991,
+      "snapshot_hours": [
+        "08"
+      ]
+    },
+    {
+      "symbol": "ETHUSDC",
+      "date": "2026-08-01",
+      "status": "ok",
+      "n_rows": 7957,
+      "elapsed_seconds": 99.508,
+      "snapshot_hours": [
+        "21",
+        "22"
+      ]
+    },
+    {
+      "symbol": "ETHUSDC",
+      "date": "2026-08-02",
+      "status": "ok",
+      "n_rows": 7675,
+      "elapsed_seconds": 172.682,
+      "snapshot_hours": [
+        "21"
+      ]
+    },
+    {
+      "symbol": "ETHUSDC",
+      "date": "2026-08-03",
+      "status": "ok",
+      "n_rows": 8272,
+      "elapsed_seconds": 150.974,
+      "snapshot_hours": [
+        "21"
+      ]
+    },
+    {
+      "symbol": "ETHUSDC",
+      "date": "2026-08-04",
+      "status": "ok",
+      "n_rows": 24376,
+      "elapsed_seconds": 527.782,
+      "snapshot_hours": [
+        "17",
+        "19"
+      ]
+    },
+    {
+      "symbol": "ETHUSDC",
+      "date": "2026-08-05",
+      "status": "ok",
+      "n_rows": 18519,
+      "elapsed_seconds": 450.97,
+      "snapshot_hours": [
+        "18"
+      ]
+    },
+    {
+      "symbol": "ETHUSDC",
+      "date": "2026-08-06",
+      "status": "ok",
+      "n_rows": 19116,
+      "elapsed_seconds": 361.552,
+      "snapshot_hours": [
+        "18"
+      ]
+    },
+    {
+      "symbol": "ETHUSDC",
+      "date": "2026-08-07",
+      "status": "ok",
+      "n_rows": 55616,
+      "elapsed_seconds": 1959.783,
+      "snapshot_hours": [
+        "08"
+      ]
+    },
+    {
+      "symbol": "SOLUSDC",
+      "date": "2026-08-01",
+      "status": "ok",
+      "n_rows": 7958,
+      "elapsed_seconds": 9.219,
+      "snapshot_hours": [
+        "21",
+        "22"
+      ]
+    },
+    {
+      "symbol": "SOLUSDC",
+      "date": "2026-08-02",
+      "status": "ok",
+      "n_rows": 7675,
+      "elapsed_seconds": 11.677,
+      "snapshot_hours": [
+        "21"
+      ]
+    },
+    {
+      "symbol": "SOLUSDC",
+      "date": "2026-08-03",
+      "status": "ok",
+      "n_rows": 8270,
+      "elapsed_seconds": 12.481,
+      "snapshot_hours": [
+        "21"
+      ]
+    },
+    {
+      "symbol": "SOLUSDC",
+      "date": "2026-08-04",
+      "status": "ok",
+      "n_rows": 24376,
+      "elapsed_seconds": 42.275,
+      "snapshot_hours": [
+        "17",
+        "19"
+      ]
+    },
+    {
+      "symbol": "SOLUSDC",
+      "date": "2026-08-05",
+      "status": "ok",
+      "n_rows": 18519,
+      "elapsed_seconds": 32.621,
+      "snapshot_hours": [
+        "18"
+      ]
+    },
+    {
+      "symbol": "SOLUSDC",
+      "date": "2026-08-06",
+      "status": "ok",
+      "n_rows": 19116,
+      "elapsed_seconds": 30.771,
+      "snapshot_hours": [
+        "18"
+      ]
+    },
+    {
+      "symbol": "SOLUSDC",
+      "date": "2026-08-07",
+      "status": "ok",
+      "n_rows": 55615,
+      "elapsed_seconds": 176.373,
+      "snapshot_hours": [
+        "08"
+      ]
+    }
+  ]
+}

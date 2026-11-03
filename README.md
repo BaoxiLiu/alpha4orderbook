@@ -52,6 +52,23 @@ panels/dt=1s/K=20/symbol=BTCUSDC/date=2026-08-01/manifest.json
 
 **Cross-hour policy (`CARRY_FORWARD_AFTER_SNAPSHOT`):** skip missing hours and update-only hours before the first snapshot; after the book is ready, carry the in-memory L2 book into later hours (including update-only); a later snapshot resyncs.
 
+## Panel range + factor pack (M4 slice)
+
+```bash
+python -m a4ob.cli build-panel-range \
+  --symbols BTCUSDC,ETHUSDC,SOLUSDC \
+  --start 2026-08-01 --end 2026-08-07 \
+  --workers 3
+
+python -m a4ob.cli run-eval-pack \
+  --factors configs/factors/imbalance.yaml,configs/factors/micro_combo.yaml \
+  --symbols BTCUSDC,ETHUSDC,SOLUSDC \
+  --start 2026-08-01 --end 2026-08-07 \
+  --train-days 5 --test-days 2
+```
+
+Skips existing day panels when `manifest.json` `config_hash` matches. Days with no snapshot hour write a `no_snapshot` manifest and are skipped by the pack runner.
+
 ## Factor Spec + run-eval (M3)
 
 Declare factors as YAML Specs under `configs/factors/`. The runner loads a day panel, applies Spec steps (panel ops / optional asof-join), scores Rank IC, and writes a report — **no full-depth tick replay**.

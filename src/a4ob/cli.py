@@ -1,4 +1,4 @@
-"""CLI: ``python -m a4ob.cli smoke|eval|build-panel|run-eval``."""
+"""CLI: ``python -m a4ob.cli smoke|eval|build-panel|build-panel-range|run-eval|run-eval-pack``."""
 
 from __future__ import annotations
 
@@ -124,6 +124,61 @@ def _cmd_run_eval(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_build_panel_range(args: argparse.Namespace) -> int:
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+    )
+    from .panel.range import build_panel_range
+
+    symbols = [s.strip() for s in args.symbols.split(",") if s.strip()]
+    result = build_panel_range(
+        symbols=symbols,
+        start_date=args.start,
+        end_date=args.end,
+        config_path=args.config,
+        panels_root=args.out,
+        workers=args.workers,
+        skip_fresh=not args.force,
+    )
+    # Compact stdout (omit huge hour_logs inside nested results)
+    compact = {k: v for k, v in result.items() if k != "results"}
+    compact["results"] = [
+        {
+            "symbol": r.get("symbol"),
+            "date": r.get("date"),
+            "status": r.get("status"),
+            "n_rows": r.get("n_rows"),
+            "elapsed_seconds": r.get("elapsed_seconds"),
+            "error": r.get("error"),
+        }
+        for r in result.get("results", [])
+    ]
+    print(json.dumps(compact, indent=2, default=str))
+    return 0 if result.get("n_error", 0) == 0 else 1
+
+
+def _cmd_run_eval_pack(args: argparse.Namespace) -> int:
+    from .eval.pack import run_eval_pack
+
+    symbols = [s.strip() for s in args.symbols.split(",") if s.strip()]
+    factors = [f.strip() for f in args.factors.split(",") if f.strip()]
+    result = run_eval_pack(
+        factor_specs=factors,
+        symbols=symbols,
+        start_date=args.start,
+        end_date=args.end,
+        config_path=args.config,
+        panels_root=args.panels_root,
+        out_dir=args.out,
+        train_days=args.train_days,
+        test_days=args.test_days,
+    )
+    print(json.dumps(result, indent=2, default=str))
+    print(f"\nReport: {result['report_path']}", file=sys.stderr)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="a4ob", description="alpha4orderbook CLI")
     sub = p.add_subparsers(dest="command", required=True)
@@ -199,6 +254,50 @@ def build_parser() -> argparse.ArgumentParser:
     )
     re_.add_argument("--out", default=None, help="Experiment output directory")
     re_.set_defaults(func=_cmd_run_eval)
+
+    bpr = sub.add_parser(
+        "build-panel-range",
+        help="Parallel (symbol, day) panel builds over a date range (M4)",
+    )
+    bpr.add_argument("--config", default=None)
+    bpr.add_argument(
+        "--symbols",
+        required=True,
+        help="Comma-separated symbols, e.g. BTCUSDC,ETHUSDC,SOLUSDC",
+    )
+    bpr.add_argument("--start", required=True, help="YYYY-MM-DD inclusive")
+    bpr.add_argument("--end", required=True, help="YYYY-MM-DD inclusive")
+    bpr.add_argument("--workers", type=int, default=3)
+    bpr.add_argument(
+        "--force",
+        action="store_true",
+        help="Rebuild even when manifest config_hash matches",
+    )
+    bpr.add_argument("--out", default=None, help="Panels root (default: repo panels/)")
+    bpr.set_defaults(func=_cmd_build_panel_range)
+
+    pack = sub.add_parser(
+        "run-eval-pack",
+        help="Factor pack IC matrix across symbols × days (M4)",
+    )
+    pack.add_argument("--config", default=None)
+    pack.add_argument(
+        "--factors",
+        required=True,
+        help="Comma-separated Factor Spec paths",
+    )
+    pack.add_argument(
+        "--symbols",
+        required=True,
+        help="Comma-separated symbols",
+    )
+    pack.add_argument("--start", required=True, help="YYYY-MM-DD inclusive")
+    pack.add_argument("--end", required=True, help="YYYY-MM-DD inclusive")
+    pack.add_argument("--train-days", type=int, default=5)
+    pack.add_argument("--test-days", type=int, default=2)
+    pack.add_argument("--panels-root", default=None)
+    pack.add_argument("--out", default=None, help="Experiment output directory")
+    pack.set_defaults(func=_cmd_run_eval_pack)
 
     return p
 

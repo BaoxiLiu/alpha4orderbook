@@ -65,6 +65,7 @@ def build_day_panel(
     hour: str | None = None,
     panels_root: str | Path | None = None,
     data_root: str | Path | None = None,
+    allow_empty: bool = True,
 ) -> dict[str, Any]:
     """
     Build one (symbol, day) [or single-hour debug] research panel + manifest.
@@ -73,6 +74,9 @@ def build_day_panel(
     ----------
     hour:
         If set (``HH``), only that UTC hour is processed (debug). Otherwise 00–23.
+    allow_empty:
+        If True (default), days with no usable snapshot write a ``no_snapshot``
+        manifest and return without raising (M4 range builds).
     """
     t0 = time.perf_counter()
     cfg_path = Path(config_path) if config_path else default_config_path()
@@ -81,6 +85,7 @@ def build_day_panel(
     dt_s = int(cfg["panel"]["dt_seconds"])
     top_k = int(cfg["panel"]["top_k"])
     dt_ms = dt_s * 1000
+    cfg_h = config_hash(cfg)
     out_root = Path(panels_root) if panels_root else default_panels_root()
     out_dir = panel_day_dir(out_root, symbol=symbol, date=date, dt_seconds=dt_s, top_k=top_k)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -169,12 +174,63 @@ def build_day_panel(
             )
             frames.append(panel_h)
 
+    elapsed = time.perf_counter() - t0
+
     if not frames:
-        raise RuntimeError(
+        msg = (
             f"no panel rows for {symbol} {date} "
             f"(processed={hours_processed}, snapshot_hours={snapshot_hours}, "
             f"skipped_update_only={hours_skipped_update_only}, missing={hours_missing})"
         )
+        if not allow_empty:
+            raise RuntimeError(msg)
+        logger.warning("%s", msg)
+        # Remove stale panel if any
+        stale = out_dir / "panel.parquet"
+        if stale.exists():
+            stale.unlink()
+        manifest = {
+            "schema_version": 1,
+            "status": "no_snapshot",
+            "built_at_utc": datetime.now(timezone.utc).isoformat(),
+            "elapsed_seconds": round(elapsed, 3),
+            "policy": POLICY,
+            "symbol": symbol,
+            "date": date,
+            "dt_seconds": dt_s,
+            "top_k": top_k,
+            "config_path": str(cfg_path.resolve()),
+            "config_hash": cfg_h,
+            "data_root": str(root),
+            "panel_path": None,
+            "n_rows": 0,
+            "hours_requested": hours,
+            "hours_missing": hours_missing,
+            "hours_skipped_update_only": hours_skipped_update_only,
+            "hours_processed": hours_processed,
+            "snapshot_hours": snapshot_hours,
+            "carried_hours": carried_hours,
+            "rebuild_stats": asdict(day_stats),
+            "hour_logs": hour_logs,
+            "note": msg,
+        }
+        manifest_path = write_manifest(out_dir / "manifest.json", manifest)
+        return {
+            "status": "no_snapshot",
+            "panel_path": None,
+            "manifest_path": str(manifest_path),
+            "out_dir": str(out_dir),
+            "n_rows": 0,
+            "elapsed_seconds": round(elapsed, 3),
+            "snapshot_hours": snapshot_hours,
+            "hours_processed": hours_processed,
+            "hours_skipped_update_only": hours_skipped_update_only,
+            "hours_missing": hours_missing,
+            "sha256": None,
+            "size_bytes": 0,
+            "policy": POLICY,
+            "config_hash": cfg_h,
+        }
 
     panel = pd.concat(frames, ignore_index=True)
     panel = panel.drop_duplicates(subset=["ts_ms"], keep="last").sort_values("ts_ms")
@@ -184,10 +240,10 @@ def build_day_panel(
     panel.to_parquet(panel_path, index=False)
     size_bytes = panel_path.stat().st_size
     sha = file_sha256(panel_path)
-    elapsed = time.perf_counter() - t0
 
     manifest: dict[str, Any] = {
         "schema_version": 1,
+        "status": "ok",
         "built_at_utc": datetime.now(timezone.utc).isoformat(),
         "elapsed_seconds": round(elapsed, 3),
         "policy": POLICY,
@@ -200,7 +256,7 @@ def build_day_panel(
         "dt_seconds": dt_s,
         "top_k": top_k,
         "config_path": str(cfg_path.resolve()),
-        "config_hash": config_hash(cfg),
+        "config_hash": cfg_h,
         "data_root": str(root),
         "panel_path": str(panel_path),
         "n_rows": int(len(panel)),
@@ -221,6 +277,7 @@ def build_day_panel(
     manifest_path = write_manifest(out_dir / "manifest.json", manifest)
 
     return {
+        "status": "ok",
         "panel_path": str(panel_path),
         "manifest_path": str(manifest_path),
         "out_dir": str(out_dir),
@@ -233,4 +290,5 @@ def build_day_panel(
         "sha256": sha,
         "size_bytes": size_bytes,
         "policy": POLICY,
+        "config_hash": cfg_h,
     }
