@@ -1,0 +1,50 @@
+# Sealed research contract for alpha4orderbook (M0+)
+# Window is inclusive of start_date and end_date (UTC calendar days).
+
+universe:
+  - BTCUSDC
+  - ETHUSDC
+  - SOLUSDC
+  - XRPUSDC
+  - DOGEUSDC
+  - LTCUSDC
+  - CRVUSDC
+  - UNIUSDC
+  - SUIUSDC
+  - WIFUSDC
+  - 1000PEPEUSDC
+  - 1000SHIBUSDC
+  - 1000BONKUSDC
+
+window:
+  start_date: "2026-08-01"
+  end_date: "2026-10-10"   # inclusive
+
+panel:
+  dt_seconds: 1
+  top_k: 20
+
+labels:
+  horizons_seconds: [1, 5, 10, 30, 60, 300]
+  price_col: mid
+
+data:
+  # CryptoHFTData vendor dump (Binance USD-M USDC perps)
+  root: "/Volumes/Seagate Bas/科研项目/quant_project/cryptocurrency_quant/data/cryptohftdata/raw/binance_futures"
+  exchange: binance_futures
+  kinds:
+    - orderbook
+    - trades
+    - mark_price
+
+smoke:
+  symbol: BTCUSDC
+  # Prefer this hour; runner falls back to first sealed-window hour with a
+  # snapshot if absent. On 2026-08-01, BTCUSDC first snapshot is hour 21
+  # (hours 00–20 are update-only).
+  date: "2026-08-01"
+  hour: "21"
+
+eval:
+  primary_metric: rank_ic
+  min_obs: 30
