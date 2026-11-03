@@ -10,8 +10,10 @@ Layers (do **not** tick-replay every factor on full depth for all coins):
 |---|---|
 | **L0** | Book rebuild from snapshot + incremental updates (per symbol-hour) |
 | **L1** | Research panel: fixed clock (default 1s), top-K depth + mid/spread cores |
-| **L2** | Factor eval on the panel (Rank IC × horizons × symbol, …) |
+| **L2** | Factor eval on the panel (Rank IC × horizons × symbol, quantile 分层, HTML charts) |
 | **L3** | Optional execution realism later (not required for predictive IC) |
+
+**分层 vs depth L3/L5:** quantile *分层收益* buckets the **factor value** into Q groups (default 5) using **time-series quantiles within each symbol-day** (`eval.layering_method: ts_within_day`). Names like `imbalance_l3` mean **order-book levels**, not IC quintiles.
 
 Sealed research window: **2026-08-01 → 2026-10-10**, 13 symbols — see `configs/sealed.yaml`.
 
@@ -68,6 +70,8 @@ python -m a4ob.cli run-eval-pack \
 ```
 
 Skips existing day panels when `manifest.json` `config_hash` matches. Days with no snapshot hour write a `no_snapshot` manifest and are skipped by the pack runner.
+
+Pack outputs (under `experiments/…`): `report.md`, **`report.html`** (Plotly charts via CDN `cdn.plot.ly` — needs network on first open unless cached), `ic_*.csv`, `layering_*.csv` (per-day and mean quantile / long-short returns).
 
 ## Factor Spec + run-eval (M3)
 
@@ -140,14 +144,20 @@ src/a4ob/
   panel/    # L1 schema / helpers
   factors/  # panel factor adapters
   labels/   # forward returns
-  eval/     # Rank IC suite
-  report/   # Markdown reports
+  eval/     # Rank IC + quantile layering
+  report/   # Markdown + HTML (Plotly CDN) reports
   cli.py
 configs/sealed.yaml
 third_party/NOTES.md
 experiments/          # run outputs (panel parquet gitignored)
 ```
 
+### Reports & layering
+
+- `run-eval` / `run-eval-pack` write `report.md` and `report.html` side by side.
+- HTML charts: IC×horizon decay, factor×horizon heatmap, train/test bars (pack), quantile mean returns + Q_high−Q_low decay.
+- Config: `eval.n_quantiles` (default 5) in `configs/sealed.yaml`.
+
 ## Roadmap
 
-Project-store docs (strategy, survey, inventory) live beside this repo’s planning notes. Milestones: M0 scaffold → M1 smoke → M2 daily panels → M3 Factor Spec runner → M4 full-universe panels → M5 multi-service orchestration → M6 optional L3 → M7 mining on the same runner.
+Project-store docs (strategy, survey, inventory) live beside this repo’s planning notes. Milestones: M0 scaffold → M1 smoke → M2 daily panels → M3 Factor Spec runner → M4 full-universe panels → M5 multi-service orchestration → M6 optional L3 → M7 mining on the same runner. Factor-library track L0–L5 (quality gate + orthogonality) is separate.

@@ -48,3 +48,6 @@ smoke:
 eval:
   primary_metric: rank_ic
   min_obs: 30
+  # Quantile 分层: TS buckets within each symbol-day (not cross-section; not book L3/L5)
+  n_quantiles: 5
+  layering_method: ts_within_day

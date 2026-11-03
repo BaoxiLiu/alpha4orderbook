@@ -17,6 +17,8 @@ def write_eval_report(
     spec: FactorSpec,
     meta: dict[str, Any],
     suite: dict[str, Any],
+    layering: pd.DataFrame | None = None,
+    layering_note: str = "",
 ) -> Path:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -102,12 +104,25 @@ def write_eval_report(
         lines.append(_df_markdown(suite["time_split"], index=False))
         lines.append("")
 
+    if layering is not None and not layering.empty:
+        lines.append("## Quantile layering (分层收益)")
+        lines.append("")
+        if layering_note:
+            lines.append(f"> {layering_note}")
+            lines.append("")
+        lines.append(_df_markdown(layering, index=False))
+        lines.append("")
+
     lines.append("## Notes")
     lines.append("")
     lines.append(
         "- Labels are mid-to-mid forward returns on the panel clock (no fees/latency)."
     )
     lines.append("- Rank IC ≠ tradable edge; L3 realism is out of scope for this report.")
+    lines.append(
+        "- Companion HTML: `report.html`. 分层 = TS factor quantiles within day "
+        "(not order-book depth L3/L5)."
+    )
     lines.append("- Multi-day / cross-symbol folds belong to M4+.")
     lines.append("")
     lines.append("---")

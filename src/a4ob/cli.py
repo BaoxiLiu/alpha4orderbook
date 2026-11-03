@@ -121,6 +121,8 @@ def _cmd_run_eval(args: argparse.Namespace) -> int:
     )
     print(json.dumps(result, indent=2, default=str))
     print(f"\nReport: {result['report_path']}", file=sys.stderr)
+    if result.get("html_report_path"):
+        print(f"HTML: {result['html_report_path']}", file=sys.stderr)
     return 0
 
 
@@ -176,6 +178,8 @@ def _cmd_run_eval_pack(args: argparse.Namespace) -> int:
     )
     print(json.dumps(result, indent=2, default=str))
     print(f"\nReport: {result['report_path']}", file=sys.stderr)
+    if result.get("html_report_path"):
+        print(f"HTML: {result['html_report_path']}", file=sys.stderr)
     return 0
 
 
