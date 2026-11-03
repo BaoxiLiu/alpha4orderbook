@@ -10,6 +10,13 @@ import numpy as np
 import pandas as pd
 
 from .baseline import imbalance as imbalance_series
+from .catalog_nine import (
+    op_cont_ofi_panel_1s,
+    op_imbalance_l3,
+    op_microprice_offset_bp,
+    op_mid_return_1s,
+    op_spread_bp,
+)
 
 
 # ---- safe expression eval (names → columns) ---------------------------------
@@ -123,4 +130,10 @@ OPS = {
     "microprice_dev": op_microprice_dev,
     "spread_bps": op_spread_bps,
     "expr": op_expr,
+    # cryptocurrency_quant catalog / feature_cache ports
+    "spread_bp": op_spread_bp,
+    "microprice_offset_bp": op_microprice_offset_bp,
+    "mid_return_1s": op_mid_return_1s,
+    "cont_ofi_panel_1s": op_cont_ofi_panel_1s,
+    "imbalance_l3": op_imbalance_l3,
 }

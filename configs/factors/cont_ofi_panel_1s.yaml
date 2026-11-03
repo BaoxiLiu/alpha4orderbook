@@ -1,0 +1,37 @@
+# Panel approximation of cryptocurrency_quant Cont-style L1 OFI
+# Source formula: app/backtesting/feature_cache.py add_ofi
+# Catalog: FACTOR_CATALOG.md · ofi (event prefix-diff over 1s)
+#
+# Caveat: here we apply the Cont L1 *change* between consecutive 1s panel BBO
+# rows (not full event-stream prefix). Use as a portable panel proxy only.
+factor:
+  name: cont_ofi_panel_1s
+  version: "0.1.0"
+  frequency: 1s
+  description: >
+    Cont L1 OFI change on consecutive 1s top-of-book panel states
+    (panel proxy of feature_cache.add_ofi / catalog ofi).
+
+  output:
+    - col: cont_ofi_panel_1s
+      dtype: float64
+
+  requires:
+    panel: [best_bid, best_ask, best_bid_sz, best_ask_sz, ts_ms]
+
+  steps:
+    - id: cont_ofi_panel_1s
+      op: cont_ofi_panel_1s
+      params: { out: cont_ofi_panel_1s }
+      outputs: [cont_ofi_panel_1s]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: cont_ofi_panel_1s
+    splits:
+      method: time
+      fractions: [0.6, 0.2, 0.2]

@@ -1,0 +1,33 @@
+# Port of cryptocurrency_quant "已有九特征" · spread_bp
+# Source: app/backtesting/research/FACTOR_CATALOG.md
+#         app/backtesting/feature_cache.py FeatureStore.lookup
+factor:
+  name: spread_bp
+  version: "0.1.0"
+  frequency: 1s
+  description: >
+    (ask−bid)/mid×10000. Exact panel port of FACTOR_CATALOG / feature_cache spread_bp.
+
+  output:
+    - col: spread_bp
+      dtype: float64
+
+  requires:
+    panel: [mid, spread, best_bid, best_ask]
+
+  steps:
+    - id: spread_bp
+      op: spread_bp
+      params: { out: spread_bp }
+      outputs: [spread_bp]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: spread_bp
+    splits:
+      method: time
+      fractions: [0.6, 0.2, 0.2]
