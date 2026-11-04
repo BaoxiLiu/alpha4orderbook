@@ -136,8 +136,7 @@ def write_leaderboard_html(
 </head>
 <body>
   <h1>Universe leaderboard</h1>
-  <p class="note">Dual-library scorecard · composite from IC / decay / cross-symbol / train−test / layering LS / coverage.
-  Core representatives highlighted in green. <strong>Static HTML</strong> — table rows are inline (no CDN, no JS required).</p>
+  <p class="note">One Universe table (Core ⊆ Universe). Column <code>in_core</code> = <strong>yes</strong> for Core v0 representatives; blank otherwise. Green rows = Core. Composite from IC / decay / cross-symbol / train−test / layering LS / coverage. <strong>Static HTML</strong> — no CDN / no JS.</p>
   <div class="meta">{meta_txt}</div>
   <div class="chart-wrap">
     <p class="chart-title">Top-20 composite score</p>

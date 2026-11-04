@@ -72,7 +72,22 @@ def build_core(
     core_yaml.write_text(yaml.safe_dump(core_doc, sort_keys=False, allow_unicode=True), encoding="utf-8")
     (out / "core_v0.json").write_text(json.dumps(core_doc, indent=2, default=str), encoding="utf-8")
 
-    # refresh leaderboard with core highlight
+    # Universe ⊇ Core: stamp membership on ranking CSV + one-table leaderboard
+    core_set = set(reps)
+    ranking = ranking.copy()
+    ranking["in_core"] = ranking["factor"].map(
+        lambda f: "yes" if str(f) in core_set else ""
+    )
+    ranking_path_out = snap / "universe_ranking.csv"
+    snap.mkdir(parents=True, exist_ok=True)
+    ranking.to_csv(ranking_path_out, index=False)
+    # keep caller's ranking CSV in sync when it lives under library/
+    try:
+        if ranking_path.resolve() != ranking_path_out.resolve():
+            ranking.to_csv(ranking_path, index=False)
+    except OSError:
+        pass
+
     meta = {
         "n_universe": len(ranking),
         "n_core": len(reps),
@@ -85,8 +100,6 @@ def build_core(
         meta=meta,
         core_reps=reps,
     )
-    # also update latest snapshot
-    snap.mkdir(parents=True, exist_ok=True)
     write_leaderboard_html(snap / "universe_leaderboard.html", ranking=ranking, meta=meta, core_reps=reps)
 
     summary_lines = [
