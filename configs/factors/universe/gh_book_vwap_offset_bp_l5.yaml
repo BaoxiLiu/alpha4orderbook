@@ -1,0 +1,29 @@
+# Universe Spec — gh_book_vwap_offset_bp_l5
+# Sources: github_survey:gh_book_vwap_offset_bp_l5
+factor:
+  name: gh_book_vwap_offset_bp_l5
+  version: "0.4.0"
+  frequency: 1s
+  description: >
+    Top-5 both-side book VWAP vs mid (bp)
+
+  output:
+    - col: gh_book_vwap_offset_bp_l5
+      dtype: float64
+
+  requires:
+    panel: [mid, spread, best_bid, best_ask, best_bid_sz, best_ask_sz, bid_px_0, ask_px_0, bid_sz_0, ask_sz_0, bid_px_1, ask_px_1, bid_sz_1, ask_sz_1, bid_px_2, ask_px_2, bid_sz_2, ask_sz_2, bid_px_3, ask_px_3, bid_sz_3, ask_sz_3, bid_px_4, ask_px_4, bid_sz_4, ask_sz_4, bid_px_5, ask_px_5, bid_sz_5, ask_sz_5, bid_px_6, ask_px_6, bid_sz_6, ask_sz_6, bid_px_7, ask_px_7, bid_sz_7, ask_sz_7, bid_px_8, ask_px_8, bid_sz_8, ask_sz_8, bid_px_9, ask_px_9, bid_sz_9, ask_sz_9]
+
+  steps:
+    - id: gh_book_vwap_offset_bp_l5
+      op: book_vwap_offset_bp
+      params: { levels: 5, out: 'gh_book_vwap_offset_bp_l5' }
+      outputs: [gh_book_vwap_offset_bp_l5]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: gh_book_vwap_offset_bp_l5

@@ -1,0 +1,29 @@
+# Universe Spec — gh_kyle_lambda_30s
+# Sources: github_survey:gh_kyle_lambda_30s
+factor:
+  name: gh_kyle_lambda_30s
+  version: "0.4.0"
+  frequency: 1s
+  description: >
+    Rolling |Δmid_bp| / |signed aggressor vol| (Kyle λ proxy)
+
+  output:
+    - col: gh_kyle_lambda_30s
+      dtype: float64
+
+  requires:
+    panel: [mid, spread, best_bid, best_ask, best_bid_sz, best_ask_sz, nh_ti_1s, nh_signed_volume1]
+
+  steps:
+    - id: gh_kyle_lambda_30s
+      op: kyle_lambda_proxy
+      params: { window: 30, out: 'gh_kyle_lambda_30s' }
+      outputs: [gh_kyle_lambda_30s]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: gh_kyle_lambda_30s

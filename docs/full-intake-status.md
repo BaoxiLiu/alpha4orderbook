@@ -75,4 +75,16 @@ Top NH ranks:  /  (#3–4),  /  (#6–7),  /  (#17–18),  cluster (#49–56).
 -  (165)
 -  (static, no CDN)
 -  / 
-- Store: , , , 
+- Store: , , ,
+
+---
+
+## GitHub Batch1 intake (2026-11-04)
+
+- Survey: [`github-orderbook-factor-survey.md`](github-orderbook-factor-survey.md)
+- Admitted Specs: **8** `gh_*` (panel + book×trades)
+- Universe after: **173** (was 165)
+- Core after: **75** (was 74); new Core rep: `gh_book_vwap_offset_bp_l5`
+- Strongest new IC: `gh_weighted_depth_imb_l5/l10` ranks **#6–#7** but collinear with `l1_imbalance` cluster
+- Weak / low priority: `gh_kyle_lambda_30s`, `gh_relative_spread_depth`
+- Still blocked (Batch2): event multi-level OFI, cancel/add rates, VPIN, Stoikov Markov micro-price, mark_price joins

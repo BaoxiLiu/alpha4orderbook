@@ -658,6 +658,145 @@ def op_bid_outer_share(panel: pd.DataFrame, params: dict[str, Any]) -> dict[str,
     return op_side_outer_share(panel, p)
 
 
+
+def weighted_depth_imb(panel: pd.DataFrame, *, levels: int, decay: float, out: str, eps: float = 1e-12) -> pd.Series:
+    """Geometric depth-decay size imbalance (orderflow-metrics / lobkit-style).
+
+    w_i = decay**i; I = (Σ w·bid_sz − Σ w·ask_sz) / (Σ w·bid_sz + Σ w·ask_sz).
+    """
+    bid = _level_stack(panel, "bid", levels)
+    ask = _level_stack(panel, "ask", levels)
+    L = max(bid.shape[1], ask.shape[1])
+    if L == 0:
+        return pd.Series(np.nan, index=panel.index, name=out)
+    w = (float(decay) ** np.arange(L, dtype=np.float64)).reshape(1, -1)
+    if bid.shape[1] < L:
+        bid = np.pad(bid, ((0, 0), (0, L - bid.shape[1])))
+    if ask.shape[1] < L:
+        ask = np.pad(ask, ((0, 0), (0, L - ask.shape[1])))
+    wb = (bid * w).sum(axis=1)
+    wa = (ask * w).sum(axis=1)
+    val = (wb - wa) / np.maximum(wb + wa, eps)
+    return pd.Series(val, index=panel.index, name=out)
+
+
+def liquidity_pressure(panel: pd.DataFrame, *, levels: int, out: str, eps: float = 1e-12) -> pd.Series:
+    """Depth imbalance scaled by inverse relative spread (NightCoderLJ-style pressure).
+
+    ((Σbid − Σask)/(Σbid+Σask)) / ((ask−bid)/mid + eps)
+    """
+    bid = _level_stack(panel, "bid", levels).sum(axis=1)
+    ask = _level_stack(panel, "ask", levels).sum(axis=1)
+    mid = panel["mid"].to_numpy(dtype=np.float64)
+    bb = panel["best_bid"].to_numpy(dtype=np.float64)
+    ba = panel["best_ask"].to_numpy(dtype=np.float64)
+    imb = (bid - ask) / np.maximum(bid + ask, eps)
+    rel_spread = (ba - bb) / np.maximum(mid, eps)
+    val = imb / np.maximum(rel_spread, eps)
+    return pd.Series(val, index=panel.index, name=out)
+
+
+def ofi_over_depth(panel: pd.DataFrame, *, out: str, eps: float = 1e-12) -> pd.Series:
+    """Cont panel OFI normalized by average touch depth (Cont universal β∝1/depth)."""
+    ofi = cont_ofi_panel_1s(panel, out="_ofi").to_numpy(dtype=np.float64)
+    depth = 0.5 * (
+        panel["best_bid_sz"].to_numpy(dtype=np.float64)
+        + panel["best_ask_sz"].to_numpy(dtype=np.float64)
+    )
+    val = ofi / np.maximum(depth, eps)
+    return pd.Series(val, index=panel.index, name=out)
+
+
+def book_vwap_offset_bp(panel: pd.DataFrame, *, levels: int, out: str, eps: float = 1e-12) -> pd.Series:
+    """Multi-level book VWAP (both sides) vs mid, in bp — deep microprice proxy."""
+    mid = panel["mid"].to_numpy(dtype=np.float64)
+    num = np.zeros(len(panel), dtype=np.float64)
+    den = np.zeros(len(panel), dtype=np.float64)
+    for side in ("bid", "ask"):
+        for i in range(min(levels, _max_lvl(panel, side))):
+            px = _px(panel, side, i)
+            sz = _sz(panel, side, i)
+            num += px * sz
+            den += sz
+    vwap = num / np.maximum(den, eps)
+    val = (vwap - mid) / np.maximum(mid, eps) * 1e4
+    return pd.Series(val, index=panel.index, name=out)
+
+
+def relative_spread_depth(panel: pd.DataFrame, *, out: str, eps: float = 1e-12) -> pd.Series:
+    """Quoted spread / touch depth (liquidity thinness); higher = thinner book."""
+    mid = panel["mid"].to_numpy(dtype=np.float64)
+    bb = panel["best_bid"].to_numpy(dtype=np.float64)
+    ba = panel["best_ask"].to_numpy(dtype=np.float64)
+    depth = panel["best_bid_sz"].to_numpy(dtype=np.float64) + panel["best_ask_sz"].to_numpy(dtype=np.float64)
+    spread = ba - bb
+    val = spread / np.maximum(mid * depth, eps) * 1e4
+    return pd.Series(val, index=panel.index, name=out)
+
+
+def trade_vs_depth(panel: pd.DataFrame, *, out: str, eps: float = 1e-12) -> pd.Series:
+    """Taker imbalance / log touch depth — needs nh_ti_1s joined (trades sidecar)."""
+    if "nh_ti_1s" not in panel.columns:
+        return pd.Series(np.nan, index=panel.index, name=out)
+    ti = panel["nh_ti_1s"].to_numpy(dtype=np.float64)
+    depth = panel["best_bid_sz"].to_numpy(dtype=np.float64) + panel["best_ask_sz"].to_numpy(dtype=np.float64)
+    val = ti / np.log1p(np.maximum(depth, 0.0) + eps)
+    return pd.Series(val, index=panel.index, name=out)
+
+
+def kyle_lambda_proxy(panel: pd.DataFrame, *, window: int, out: str, eps: float = 1e-12) -> pd.Series:
+    """Rolling |Δmid_bp| / |signed aggressor volume| — Kyle λ proxy (needs nh_signed_volume1)."""
+    mid = panel["mid"].to_numpy(dtype=np.float64)
+    d_bp = np.abs(np.diff(mid, prepend=np.nan) / mid * 1e4)
+    if "nh_signed_volume1" not in panel.columns:
+        return pd.Series(np.nan, index=panel.index, name=out)
+    vol = np.abs(panel["nh_signed_volume1"].to_numpy(dtype=np.float64))
+    num = pd.Series(d_bp, index=panel.index).rolling(window, min_periods=max(5, window // 5)).sum()
+    den = pd.Series(vol, index=panel.index).rolling(window, min_periods=max(5, window // 5)).sum()
+    val = num.to_numpy(dtype=np.float64) / np.maximum(den.to_numpy(dtype=np.float64), eps)
+    return pd.Series(val, index=panel.index, name=out)
+
+
+def op_weighted_depth_imb(panel: pd.DataFrame, params: dict[str, Any]) -> dict[str, pd.Series]:
+    levels = int(params.get("levels", 5))
+    decay = float(params.get("decay", 0.5))
+    out = str(params.get("out", f"weighted_depth_imb_l{levels}"))
+    return {out: weighted_depth_imb(panel, levels=levels, decay=decay, out=out)}
+
+
+def op_liquidity_pressure(panel: pd.DataFrame, params: dict[str, Any]) -> dict[str, pd.Series]:
+    levels = int(params.get("levels", 5))
+    out = str(params.get("out", f"liquidity_pressure_l{levels}"))
+    return {out: liquidity_pressure(panel, levels=levels, out=out)}
+
+
+def op_ofi_over_depth(panel: pd.DataFrame, params: dict[str, Any]) -> dict[str, pd.Series]:
+    out = str(params.get("out", "ofi_over_depth"))
+    return {out: ofi_over_depth(panel, out=out)}
+
+
+def op_book_vwap_offset_bp(panel: pd.DataFrame, params: dict[str, Any]) -> dict[str, pd.Series]:
+    levels = int(params.get("levels", 5))
+    out = str(params.get("out", f"book_vwap_offset_bp_l{levels}"))
+    return {out: book_vwap_offset_bp(panel, levels=levels, out=out)}
+
+
+def op_relative_spread_depth(panel: pd.DataFrame, params: dict[str, Any]) -> dict[str, pd.Series]:
+    out = str(params.get("out", "relative_spread_depth"))
+    return {out: relative_spread_depth(panel, out=out)}
+
+
+def op_trade_vs_depth(panel: pd.DataFrame, params: dict[str, Any]) -> dict[str, pd.Series]:
+    out = str(params.get("out", "trade_vs_depth"))
+    return {out: trade_vs_depth(panel, out=out)}
+
+
+def op_kyle_lambda_proxy(panel: pd.DataFrame, params: dict[str, Any]) -> dict[str, pd.Series]:
+    window = int(params.get("window", 30))
+    out = str(params.get("out", f"kyle_lambda_{window}s"))
+    return {out: kyle_lambda_proxy(panel, window=window, out=out)}
+
+
 BATCH_OPS = {
     "imbalance_levels": op_imbalance_levels,
     "ret_bp": op_ret_bp,
@@ -713,4 +852,11 @@ BATCH_OPS = {
     "imbalance_l3": lambda p, params: {
         str(params.get("out", "imbalance_l3")): imbalance_l3(p, out=str(params.get("out", "imbalance_l3")))
     },
+    "weighted_depth_imb": op_weighted_depth_imb,
+    "liquidity_pressure": op_liquidity_pressure,
+    "ofi_over_depth": op_ofi_over_depth,
+    "book_vwap_offset_bp": op_book_vwap_offset_bp,
+    "relative_spread_depth": op_relative_spread_depth,
+    "trade_vs_depth": op_trade_vs_depth,
+    "kyle_lambda_proxy": op_kyle_lambda_proxy,
 }
