@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>a4ob Core leaderboard</title>
+<style>
+  :root {
+    --ink:#1c1a17; --muted:#5c574e; --line:#ddd6c8; --paper:#fffefb;
+    --bg:#f4f1ea; --core:#0b6e4f; --bar:#1d3557; --th:#e8f2ec;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:24px; font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Songti SC", serif;
+         background: linear-gradient(165deg, #eef6f1 0%, #ebe4d6 45%, #f7f3ea 100%); color:var(--ink); }
+  h1 { margin:0 0 8px; font-size:1.75rem; letter-spacing:-0.02em; }
+  .note { color:var(--muted); margin:0 0 16px; font-size:0.95rem; max-width:72ch; }
+  .meta { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:0.78rem;
+           background:var(--paper); border:1px solid var(--line); padding:10px 12px; border-radius:8px;
+           white-space:pre-wrap; word-break:break-word; margin-bottom:16px; }
+  .chart-wrap { background:var(--paper); border:1px solid var(--line); border-radius:10px;
+                 padding:16px 16px 8px; margin:0 0 20px; }
+  .chart-title { font-size:0.9rem; color:var(--muted); margin:0 0 12px; }
+  .bars { display:flex; flex-direction:column; gap:6px; }
+  .bar-row { display:grid; grid-template-columns: minmax(140px, 220px) 1fr 64px; gap:10px; align-items:center; }
+  .bar-label { font-family: ui-sans-serif, system-ui, sans-serif; font-size:0.78rem;
+                overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .bar-track { height:14px; background:#efe9dc; border-radius:4px; overflow:hidden; }
+  .bar-fill { height:100%; border-radius:4px; background:var(--bar); min-width:2px; }
+  .bar-fill.core { background:var(--core); }
+  .bar-val { font-family: ui-sans-serif, system-ui, sans-serif; font-size:0.75rem; text-align:right; }
+  .legend { font-size:0.8rem; color:var(--muted); margin-top:10px; }
+  .legend span.core { color:var(--core); font-weight:600; }
+  table { border-collapse:collapse; width:100%; background:var(--paper);
+           font-family: ui-sans-serif, system-ui, sans-serif; font-size:0.82rem; }
+  th, td { border:1px solid var(--line); padding:6px 8px; text-align:right; }
+  th { background:var(--th); text-align:left; position:sticky; top:0; }
+  td:nth-child(1), td:nth-child(2), th:nth-child(1), th:nth-child(2) { text-align:left; }
+  tr.core { background:#e7f6ef; }
+  .scroll { max-height:70vh; overflow:auto; border:1px solid var(--line); border-radius:8px; }
+</style>
+</head>
+<body>
+  <h1>Core leaderboard</h1>
+  <p class="note">Core v0 representatives only (orthogonal subset of Universe, |ρ|≥threshold). Rows ranked by Universe composite score. <code>universe_rank</code> is the factor's rank in the full Universe table. <strong>Static HTML</strong> — no CDN / no JS.</p>
+  <div class="meta">n_universe: 173
+n_core: 75
+corr_threshold: 0.7
+built_at_utc: 2026-11-04T04:25:21.493437+00:00</div>
+  <div class="chart-wrap">
+    <p class="chart-title">Top-20 Core composite score</p>
+    <div class="bars">
+<div class="bar-row"><div class="bar-label" title="l1_imbalance">l1_imbalance</div><div class="bar-track"><div class="bar-fill core" style="width:100.00%"></div></div><div class="bar-val">0.798</div></div>
+<div class="bar-row"><div class="bar-label" title="microprice_mom_10s">microprice_mom_10s</div><div class="bar-track"><div class="bar-fill core" style="width:87.76%"></div></div><div class="bar-val">0.700</div></div>
+<div class="bar-row"><div class="bar-label" title="log_bid_notional_l3">log_bid_notional_l3</div><div class="bar-track"><div class="bar-fill core" style="width:84.92%"></div></div><div class="bar-val">0.677</div></div>
+<div class="bar-row"><div class="bar-label" title="log_ask_notional_l3">log_ask_notional_l3</div><div class="bar-track"><div class="bar-fill core" style="width:84.38%"></div></div><div class="bar-val">0.673</div></div>
+<div class="bar-row"><div class="bar-label" title="nh_signed_ofi_tanh">nh_signed_ofi_tanh</div><div class="bar-track"><div class="bar-fill core" style="width:83.89%"></div></div><div class="bar-val">0.669</div></div>
+<div class="bar-row"><div class="bar-label" title="depth_imb_10t">depth_imb_10t</div><div class="bar-track"><div class="bar-fill core" style="width:83.74%"></div></div><div class="bar-val">0.668</div></div>
+<div class="bar-row"><div class="bar-label" title="bid_touch_share_l10">bid_touch_share_l10</div><div class="bar-track"><div class="bar-fill core" style="width:83.58%"></div></div><div class="bar-val">0.667</div></div>
+<div class="bar-row"><div class="bar-label" title="depth_imb_3t_d5s">depth_imb_3t_d5s</div><div class="bar-track"><div class="bar-fill core" style="width:82.99%"></div></div><div class="bar-val">0.662</div></div>
+<div class="bar-row"><div class="bar-label" title="ask_touch_share_l10">ask_touch_share_l10</div><div class="bar-track"><div class="bar-fill core" style="width:82.50%"></div></div><div class="bar-val">0.658</div></div>
+<div class="bar-row"><div class="bar-label" title="depth_imb_5bp">depth_imb_5bp</div><div class="bar-track"><div class="bar-fill core" style="width:81.16%"></div></div><div class="bar-val">0.647</div></div>
+<div class="bar-row"><div class="bar-label" title="w1000ms_delta_imbalance_l3">w1000ms_delta_imbalance_l3</div><div class="bar-track"><div class="bar-fill core" style="width:80.29%"></div></div><div class="bar-val">0.640</div></div>
+<div class="bar-row"><div class="bar-label" title="w2000ms_ask_l5_change_fraction">w2000ms_ask_l5_change_fraction</div><div class="bar-track"><div class="bar-fill core" style="width:77.74%"></div></div><div class="bar-val">0.620</div></div>
+<div class="bar-row"><div class="bar-label" title="w3000ms_bid_l5_change_fraction">w3000ms_bid_l5_change_fraction</div><div class="bar-track"><div class="bar-fill core" style="width:77.73%"></div></div><div class="bar-val">0.620</div></div>
+<div class="bar-row"><div class="bar-label" title="w3000ms_ask_l5_change_fraction">w3000ms_ask_l5_change_fraction</div><div class="bar-track"><div class="bar-fill core" style="width:77.39%"></div></div><div class="bar-val">0.617</div></div>
+<div class="bar-row"><div class="bar-label" title="w2000ms_bid_l5_change_fraction">w2000ms_bid_l5_change_fraction</div><div class="bar-track"><div class="bar-fill core" style="width:77.18%"></div></div><div class="bar-val">0.616</div></div>
+<div class="bar-row"><div class="bar-label" title="w1000ms_ask_l5_change_fraction">w1000ms_ask_l5_change_fraction</div><div class="bar-track"><div class="bar-fill core" style="width:75.83%"></div></div><div class="bar-val">0.605</div></div>
+<div class="bar-row"><div class="bar-label" title="w1000ms_bid_l5_change_fraction">w1000ms_bid_l5_change_fraction</div><div class="bar-track"><div class="bar-fill core" style="width:75.69%"></div></div><div class="bar-val">0.604</div></div>
+<div class="bar-row"><div class="bar-label" title="nh_signed_amount1">nh_signed_amount1</div><div class="bar-track"><div class="bar-fill core" style="width:74.18%"></div></div><div class="bar-val">0.592</div></div>
+<div class="bar-row"><div class="bar-label" title="bid_outer_share_l5">bid_outer_share_l5</div><div class="bar-track"><div class="bar-fill core" style="width:72.18%"></div></div><div class="bar-val">0.576</div></div>
+<div class="bar-row"><div class="bar-label" title="log_bid_touch_back_ratio_l3">log_bid_touch_back_ratio_l3</div><div class="bar-track"><div class="bar-fill core" style="width:71.31%"></div></div><div class="bar-val">0.569</div></div>
+    </div>
+    <p class="legend"><span class="core">■ Core representatives</span></p>
+  </div>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>rank</th><th>factor</th><th>score</th><th>mean_ic_primary</th><th>mean_ls_primary</th><th>cross_sign_agree</th><th>train_ic_primary</th><th>test_ic_primary</th><th>coverage</th><th>universe_rank</th></tr></thead>
+      <tbody>
+<tr class="core"><td>1</td><td>l1_imbalance</td><td>0.7976</td><td>0.2575</td><td>2.788e-05</td><td>1</td><td>0.2558</td><td>0.2617</td><td>0.7558</td><td>1</td></tr>
+<tr class="core"><td>2</td><td>microprice_mom_10s</td><td>0.7</td><td>0.1868</td><td>2.043e-05</td><td>1</td><td>0.1859</td><td>0.189</td><td>0.7557</td><td>15</td></tr>
+<tr class="core"><td>3</td><td>log_bid_notional_l3</td><td>0.6773</td><td>0.1857</td><td>1.911e-05</td><td>1</td><td>0.1854</td><td>0.1865</td><td>0.7558</td><td>18</td></tr>
+<tr class="core"><td>4</td><td>log_ask_notional_l3</td><td>0.6731</td><td>-0.1815</td><td>-1.909e-05</td><td>1</td><td>-0.1801</td><td>-0.1852</td><td>0.7558</td><td>19</td></tr>
+<tr class="core"><td>5</td><td>nh_signed_ofi_tanh</td><td>0.6691</td><td>0.1751</td><td>1.813e-05</td><td>1</td><td>0.1723</td><td>0.1821</td><td>0.7558</td><td>20</td></tr>
+<tr class="core"><td>6</td><td>depth_imb_10t</td><td>0.6679</td><td>0.1939</td><td>1.961e-05</td><td>1</td><td>0.1956</td><td>0.1898</td><td>0.7558</td><td>22</td></tr>
+<tr class="core"><td>7</td><td>bid_touch_share_l10</td><td>0.6667</td><td>0.1635</td><td>1.805e-05</td><td>1</td><td>0.1648</td><td>0.1604</td><td>0.7558</td><td>23</td></tr>
+<tr class="core"><td>8</td><td>depth_imb_3t_d5s</td><td>0.662</td><td>0.1686</td><td>1.817e-05</td><td>1</td><td>0.1664</td><td>0.1741</td><td>0.7557</td><td>25</td></tr>
+<tr class="core"><td>9</td><td>ask_touch_share_l10</td><td>0.658</td><td>-0.1588</td><td>-1.767e-05</td><td>1</td><td>-0.1556</td><td>-0.167</td><td>0.7558</td><td>27</td></tr>
+<tr class="core"><td>10</td><td>depth_imb_5bp</td><td>0.6474</td><td>0.1564</td><td>1.644e-05</td><td>1</td><td>0.1539</td><td>0.1627</td><td>0.7558</td><td>29</td></tr>
+<tr class="core"><td>11</td><td>w1000ms_delta_imbalance_l3</td><td>0.6404</td><td>0.1517</td><td>1.733e-05</td><td>1</td><td>0.1488</td><td>0.159</td><td>0.7558</td><td>33</td></tr>
+<tr class="core"><td>12</td><td>w2000ms_ask_l5_change_fraction</td><td>0.6201</td><td>-0.1368</td><td>-1.557e-05</td><td>1</td><td>-0.1367</td><td>-0.1372</td><td>0.7558</td><td>41</td></tr>
+<tr class="core"><td>13</td><td>w3000ms_bid_l5_change_fraction</td><td>0.62</td><td>0.1378</td><td>1.533e-05</td><td>1</td><td>0.1353</td><td>0.1441</td><td>0.7558</td><td>42</td></tr>
+<tr class="core"><td>14</td><td>w3000ms_ask_l5_change_fraction</td><td>0.6172</td><td>-0.1357</td><td>-1.492e-05</td><td>1</td><td>-0.1352</td><td>-0.1368</td><td>0.7558</td><td>44</td></tr>
+<tr class="core"><td>15</td><td>w2000ms_bid_l5_change_fraction</td><td>0.6156</td><td>0.1346</td><td>1.508e-05</td><td>1</td><td>0.1326</td><td>0.1395</td><td>0.7558</td><td>46</td></tr>
+<tr class="core"><td>16</td><td>w1000ms_ask_l5_change_fraction</td><td>0.6048</td><td>-0.1265</td><td>-1.465e-05</td><td>1</td><td>-0.1246</td><td>-0.1313</td><td>0.7558</td><td>47</td></tr>
+<tr class="core"><td>17</td><td>w1000ms_bid_l5_change_fraction</td><td>0.6037</td><td>0.1254</td><td>1.459e-05</td><td>1</td><td>0.1225</td><td>0.1326</td><td>0.7558</td><td>48</td></tr>
+<tr class="core"><td>18</td><td>nh_signed_amount1</td><td>0.5917</td><td>0.1237</td><td>9.715e-06</td><td>1</td><td>0.1237</td><td>0.1238</td><td>0.8181</td><td>53</td></tr>
+<tr class="core"><td>19</td><td>bid_outer_share_l5</td><td>0.5757</td><td>-0.1004</td><td>-1.142e-05</td><td>1</td><td>-0.1034</td><td>-0.09297</td><td>0.7558</td><td>61</td></tr>
+<tr class="core"><td>20</td><td>log_bid_touch_back_ratio_l3</td><td>0.5688</td><td>0.1032</td><td>1.293e-05</td><td>1</td><td>0.1089</td><td>0.08895</td><td>0.7558</td><td>62</td></tr>
+<tr class="core"><td>21</td><td>ask_outer_share_l5</td><td>0.5662</td><td>0.0947</td><td>1.072e-05</td><td>1</td><td>0.09428</td><td>0.09577</td><td>0.7558</td><td>63</td></tr>
+<tr class="core"><td>22</td><td>log_ask_touch_back_ratio_l3</td><td>0.5654</td><td>-0.1027</td><td>-1.31e-05</td><td>1</td><td>-0.1042</td><td>-0.09905</td><td>0.7558</td><td>64</td></tr>
+<tr class="core"><td>23</td><td>bid_l10_width_ticks</td><td>0.5654</td><td>-0.05476</td><td>-4.089e-05</td><td>1</td><td>-0.05664</td><td>-0.05008</td><td>0.7558</td><td>65</td></tr>
+<tr class="core"><td>24</td><td>w5000ms_delta_bid_outer_share_l5</td><td>0.5538</td><td>-0.08572</td><td>-9.624e-06</td><td>1</td><td>-0.08496</td><td>-0.08761</td><td>0.7557</td><td>67</td></tr>
+<tr class="core"><td>25</td><td>w5000ms_delta_ask_outer_share_l5</td><td>0.5538</td><td>0.08578</td><td>9.914e-06</td><td>1</td><td>0.08526</td><td>0.08708</td><td>0.7557</td><td>68</td></tr>
+<tr class="core"><td>26</td><td>nh_signed_momentum1</td><td>0.5434</td><td>0.09268</td><td>1.275e-05</td><td>1</td><td>0.08962</td><td>0.1003</td><td>0.8181</td><td>69</td></tr>
+<tr class="core"><td>27</td><td>w1000ms_delta_bid_outer_share_l5</td><td>0.5394</td><td>-0.07684</td><td>-9.147e-06</td><td>1</td><td>-0.07627</td><td>-0.07825</td><td>0.7558</td><td>71</td></tr>
+<tr class="core"><td>28</td><td>w1000ms_delta_ask_outer_share_l5</td><td>0.5354</td><td>0.07436</td><td>8.856e-06</td><td>1</td><td>0.07218</td><td>0.07983</td><td>0.7558</td><td>72</td></tr>
+<tr class="core"><td>29</td><td>nh_posret_fraction_1s</td><td>0.5295</td><td>0.07916</td><td>5.826e-06</td><td>1</td><td>0.08159</td><td>0.07306</td><td>0.8181</td><td>73</td></tr>
+<tr class="core"><td>30</td><td>nh_mean_last_momentum_5s</td><td>0.5233</td><td>0.07681</td><td>8.367e-06</td><td>1</td><td>0.07557</td><td>0.0799</td><td>0.8181</td><td>75</td></tr>
+<tr class="core"><td>31</td><td>mid_return_1s</td><td>0.5167</td><td>0.07767</td><td>7.015e-06</td><td>1</td><td>0.07591</td><td>0.08206</td><td>0.7558</td><td>77</td></tr>
+<tr class="core"><td>32</td><td>nh_signed_amount5</td><td>0.5066</td><td>0.0577</td><td>4.575e-06</td><td>1</td><td>0.05717</td><td>0.05903</td><td>0.7901</td><td>80</td></tr>
+<tr class="core"><td>33</td><td>w2000ms_return_bp</td><td>0.4992</td><td>0.06176</td><td>5.343e-06</td><td>1</td><td>0.05914</td><td>0.06831</td><td>0.7558</td><td>86</td></tr>
+<tr class="core"><td>34</td><td>ask_l10_width_ticks</td><td>0.4984</td><td>0.05663</td><td>6.011e-06</td><td>1</td><td>0.05804</td><td>0.05308</td><td>0.7558</td><td>87</td></tr>
+<tr class="core"><td>35</td><td>depth_slope_imb</td><td>0.4922</td><td>0.0759</td><td>7.432e-06</td><td>0.6667</td><td>0.08032</td><td>0.06487</td><td>0.7558</td><td>88</td></tr>
+<tr class="core"><td>36</td><td>gh_book_vwap_offset_bp_l5</td><td>0.4882</td><td>-0.04383</td><td>-3.515e-06</td><td>1</td><td>-0.03872</td><td>-0.0566</td><td>0.7558</td><td>90</td></tr>
+<tr class="core"><td>37</td><td>nh_posret_fraction_5s</td><td>0.4746</td><td>0.03602</td><td>2.586e-06</td><td>1</td><td>0.03535</td><td>0.03768</td><td>0.7901</td><td>93</td></tr>
+<tr class="core"><td>38</td><td>range_position_60s</td><td>0.4652</td><td>0.02964</td><td>2.2e-06</td><td>1</td><td>0.03112</td><td>0.02596</td><td>0.7557</td><td>94</td></tr>
+<tr class="core"><td>39</td><td>up_rv_30s</td><td>0.4269</td><td>0.0186</td><td>9.583e-07</td><td>1</td><td>0.01922</td><td>0.01703</td><td>0.7557</td><td>98</td></tr>
+<tr class="core"><td>40</td><td>w2000ms_spread_change_ticks</td><td>0.4157</td><td>0.00178</td><td>-1.043e-07</td><td>1</td><td>0.0007649</td><td>0.004319</td><td>0.7558</td><td>99</td></tr>
+<tr class="core"><td>41</td><td>w1000ms_delta_bid_uniformity_l5</td><td>0.4156</td><td>0.01432</td><td>3.758e-06</td><td>0.6667</td><td>0.01437</td><td>0.0142</td><td>0.7558</td><td>100</td></tr>
+<tr class="core"><td>42</td><td>w5000ms_delta_bid_uniformity_l5</td><td>0.4155</td><td>0.01575</td><td>4.034e-06</td><td>0.6667</td><td>0.01545</td><td>0.01652</td><td>0.7557</td><td>101</td></tr>
+<tr class="core"><td>43</td><td>w1000ms_spread_change_ticks</td><td>0.414</td><td>0.001277</td><td>-3.548e-07</td><td>0.6667</td><td>0.0005435</td><td>0.003112</td><td>0.7558</td><td>104</td></tr>
+<tr class="core"><td>44</td><td>ask_hhi_l3</td><td>0.4059</td><td>0.01794</td><td>3.724e-06</td><td>0.6667</td><td>0.01636</td><td>0.02189</td><td>0.7558</td><td>105</td></tr>
+<tr class="core"><td>45</td><td>bid_hhi_l3</td><td>0.4054</td><td>-0.01623</td><td>-3.741e-06</td><td>0.6667</td><td>-0.01404</td><td>-0.02172</td><td>0.7558</td><td>107</td></tr>
+<tr class="core"><td>46</td><td>w1000ms_delta_ask_uniformity_l5</td><td>0.3973</td><td>-0.02017</td><td>-4.683e-06</td><td>0.3333</td><td>-0.0207</td><td>-0.01886</td><td>0.7558</td><td>112</td></tr>
+<tr class="core"><td>47</td><td>w5000ms_delta_ask_uniformity_l5</td><td>0.391</td><td>-0.01909</td><td>-4.43e-06</td><td>0.3333</td><td>-0.01739</td><td>-0.02333</td><td>0.7557</td><td>114</td></tr>
+<tr class="core"><td>48</td><td>rv_300s</td><td>0.3711</td><td>0.01022</td><td>6.3e-07</td><td>1</td><td>0.008903</td><td>0.0135</td><td>0.755</td><td>118</td></tr>
+<tr class="core"><td>49</td><td>nh_rv5</td><td>0.3693</td><td>0.00558</td><td>4.753e-07</td><td>1</td><td>0.004706</td><td>0.007764</td><td>0.8093</td><td>119</td></tr>
+<tr class="core"><td>50</td><td>spread_dev_1h</td><td>0.3669</td><td>0.01173</td><td>1.301e-06</td><td>1</td><td>0.01239</td><td>0.01008</td><td>0.7534</td><td>122</td></tr>
+<tr class="core"><td>51</td><td>w5000ms_realized_vol_bp</td><td>0.3633</td><td>0.004277</td><td>8.867e-08</td><td>1</td><td>0.002087</td><td>0.00975</td><td>0.7558</td><td>124</td></tr>
+<tr class="core"><td>52</td><td>nh_log_amount5</td><td>0.3548</td><td>0.00145</td><td>-6.604e-08</td><td>0.6667</td><td>0.0001406</td><td>0.004723</td><td>0.7901</td><td>128</td></tr>
+<tr class="core"><td>53</td><td>down_rv_30s</td><td>0.353</td><td>-0.009876</td><td>-1.137e-06</td><td>1</td><td>-0.01103</td><td>-0.006989</td><td>0.7557</td><td>131</td></tr>
+<tr class="core"><td>54</td><td>rv_ratio_30_300</td><td>0.3502</td><td>-0.001269</td><td>-4.351e-07</td><td>1</td><td>-0.0009468</td><td>-0.002075</td><td>0.755</td><td>132</td></tr>
+<tr class="core"><td>55</td><td>depth_symmetry_l5</td><td>0.3468</td><td>-0.006212</td><td>-7.321e-07</td><td>0.3333</td><td>-0.006553</td><td>-0.005361</td><td>0.7558</td><td>133</td></tr>
+<tr class="core"><td>56</td><td>nh_log_mean_amount_1s</td><td>0.3414</td><td>-0.001133</td><td>-2.56e-07</td><td>0.6667</td><td>-0.0002979</td><td>-0.003222</td><td>0.8181</td><td>136</td></tr>
+<tr class="core"><td>57</td><td>w2000ms_realized_vol_bp</td><td>0.3374</td><td>0.001626</td><td>-2.053e-07</td><td>0.6667</td><td>0.00162</td><td>0.001639</td><td>0.7558</td><td>138</td></tr>
+<tr class="core"><td>58</td><td>nh_distance_bp</td><td>0.3322</td><td>0.02016</td><td>2.825e-06</td><td>1</td><td>0.02366</td><td>0.0114</td><td>0.7558</td><td>139</td></tr>
+<tr class="core"><td>59</td><td>hour_sin</td><td>0.3234</td><td>0.001151</td><td>1.17e-07</td><td>0.6667</td><td>0.001146</td><td>0.001166</td><td>0.7558</td><td>145</td></tr>
+<tr class="core"><td>60</td><td>jump_count_60s</td><td>0.3194</td><td>0.001179</td><td>2.037e-07</td><td>0.6667</td><td>0.0009401</td><td>0.00437</td><td>0.7557</td><td>146</td></tr>
+<tr class="core"><td>61</td><td>log_touch_total_notional</td><td>0.2877</td><td>0.008309</td><td>5.147e-07</td><td>1</td><td>0.01133</td><td>0.0007535</td><td>0.7558</td><td>147</td></tr>
+<tr class="core"><td>62</td><td>nh_log_count1</td><td>0.2685</td><td>0.004394</td><td>3.694e-07</td><td>0.6667</td><td>0.009344</td><td>-0.007982</td><td>0.8181</td><td>149</td></tr>
+<tr class="core"><td>63</td><td>nh_price_cv_bp_1s</td><td>0.2675</td><td>0.006192</td><td>1.255e-06</td><td>0.6667</td><td>0.01287</td><td>-0.01052</td><td>0.758</td><td>151</td></tr>
+<tr class="core"><td>64</td><td>w1000ms_delta_depth_symmetry_l10</td><td>0.2624</td><td>0.0008923</td><td>3.967e-07</td><td>0.6667</td><td>-0.003776</td><td>0.01256</td><td>0.7558</td><td>152</td></tr>
+<tr class="core"><td>65</td><td>nh_signed_vwap1</td><td>0.2555</td><td>-0.001574</td><td>-1.994e-06</td><td>0.6667</td><td>-0.004059</td><td>0.00464</td><td>0.7764</td><td>153</td></tr>
+<tr class="core"><td>66</td><td>spread_ticks</td><td>0.2394</td><td>6.922e-05</td><td>-3.206e-05</td><td>0.6667</td><td>0.0001632</td><td>-0.0001658</td><td>0.7558</td><td>156</td></tr>
+<tr class="core"><td>67</td><td>w5000ms_delta_depth_symmetry_l10</td><td>0.2328</td><td>0.0008647</td><td>4.495e-08</td><td>0.6667</td><td>-0.004587</td><td>0.01449</td><td>0.7557</td><td>157</td></tr>
+<tr class="core"><td>68</td><td>ask_hhi_l10</td><td>0.2302</td><td>0.005027</td><td>2.269e-06</td><td>0.3333</td><td>0.008978</td><td>-0.004849</td><td>0.7558</td><td>158</td></tr>
+<tr class="core"><td>69</td><td>depth_symmetry_l10</td><td>0.2202</td><td>8.006e-05</td><td>-1.156e-07</td><td>0.6667</td><td>-0.005262</td><td>0.01343</td><td>0.7558</td><td>160</td></tr>
+<tr class="core"><td>70</td><td>bid_uniformity_l10</td><td>0.2118</td><td>0.0007619</td><td>1.877e-06</td><td>0.3333</td><td>0.003063</td><td>-0.004992</td><td>0.7558</td><td>161</td></tr>
+<tr class="core"><td>71</td><td>nh_signed_vwap5</td><td>0.2116</td><td>-0.002589</td><td>2.353e-07</td><td>1</td><td>0.0004754</td><td>-0.01025</td><td>0.7841</td><td>163</td></tr>
+<tr class="core"><td>72</td><td>depth_symmetry_l1</td><td>0.1952</td><td>-0.00139</td><td>7.533e-08</td><td>0.3333</td><td>0.001497</td><td>-0.008607</td><td>0.7558</td><td>169</td></tr>
+<tr class="core"><td>73</td><td>nh_signed_ti_x_distance</td><td>0.04091</td><td></td><td></td><td>0</td><td></td><td></td><td>0.8181</td><td>171</td></tr>
+<tr class="core"><td>74</td><td>nh_distance_tick</td><td>0.03779</td><td></td><td></td><td>0</td><td></td><td></td><td>0.7558</td><td>172</td></tr>
+<tr class="core"><td>75</td><td>nh_distance_tick_sq</td><td>0.03779</td><td></td><td></td><td>0</td><td></td><td></td><td>0.7558</td><td>173</td></tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

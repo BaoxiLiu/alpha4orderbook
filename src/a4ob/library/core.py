@@ -11,7 +11,7 @@ import pandas as pd
 import yaml
 
 from .cluster import greedy_abs_corr_clusters
-from .html_leaderboard import write_leaderboard_html
+from .html_leaderboard import write_core_leaderboard_html, write_leaderboard_html
 from .score import load_scoring
 
 
@@ -101,6 +101,18 @@ def build_core(
         core_reps=reps,
     )
     write_leaderboard_html(snap / "universe_leaderboard.html", ranking=ranking, meta=meta, core_reps=reps)
+    core_html = write_core_leaderboard_html(
+        out / "core_leaderboard.html",
+        ranking=ranking,
+        meta=meta,
+        core_reps=reps,
+    )
+    write_core_leaderboard_html(
+        snap / "core_leaderboard.html",
+        ranking=ranking,
+        meta=meta,
+        core_reps=reps,
+    )
 
     summary_lines = [
         f"# Core library v0",
@@ -124,6 +136,7 @@ def build_core(
         "core_yaml": str(core_yaml),
         "summary_md": str(summary_path),
         "leaderboard_html": str(html),
+        "core_leaderboard_html": str(core_html),
         "representatives": reps,
         "n_clusters": len(clusters),
         "corr_threshold": threshold,
