@@ -1,0 +1,29 @@
+# Universe Spec — nh_distance_tick
+# Sources: nh_value:distance_tick
+factor:
+  name: nh_distance_tick
+  version: "0.3.0"
+  frequency: 1s
+  description: >
+    NH port via trades_features.parquet (nh_value:distance_tick)
+
+  output:
+    - col: nh_distance_tick
+      dtype: float64
+
+  requires:
+    panel: [ts_ms, mid, best_bid, best_ask, best_bid_sz, best_ask_sz, nh_distance_tick]
+
+  steps:
+    - id: nh_distance_tick
+      op: from_column
+      params: { col: nh_distance_tick, out: nh_distance_tick }
+      outputs: [nh_distance_tick]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: nh_distance_tick

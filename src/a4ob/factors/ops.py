@@ -126,11 +126,23 @@ def op_expr(panel: pd.DataFrame, params: dict[str, Any], *, expr: str, inputs: l
     return {out: s}
 
 
+def op_from_column(panel: pd.DataFrame, params: dict[str, Any]) -> dict[str, pd.Series]:
+    """Pass through an already-joined panel column (e.g. NH trades enrich)."""
+    col = str(params.get("col") or params.get("out"))
+    out = str(params.get("out", col))
+    if col not in panel.columns:
+        raise KeyError(f"from_column: missing `{col}` (join trades_features.parquet first)")
+    s = panel[col].astype("float64")
+    s.name = out
+    return {out: s}
+
+
 OPS = {
     "imbalance": op_imbalance,
     "microprice_dev": op_microprice_dev,
     "spread_bps": op_spread_bps,
     "expr": op_expr,
+    "from_column": op_from_column,
     # cryptocurrency_quant catalog / feature_cache ports
     "spread_bp": op_spread_bp,
     "microprice_offset_bp": op_microprice_offset_bp,

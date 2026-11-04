@@ -227,6 +227,32 @@ def _cmd_build_core(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_enrich_trades(args: argparse.Namespace) -> int:
+    """Join CryptoHFTData trades onto existing day panels → trades_features.parquet."""
+    from .factors.nh_features import enrich_day_trades_features
+    from .panel.range import iter_dates
+
+    symbols = [s.strip() for s in args.symbols.split(",") if s.strip()]
+    dates = list(iter_dates(args.start, args.end))
+    rows = []
+    for sym in symbols:
+        for d in dates:
+            rows.append(
+                enrich_day_trades_features(
+                    symbol=sym,
+                    date=d,
+                    panels_root=args.panels_root,
+                    data_root=args.data_root,
+                    config_path=args.config,
+                    force=bool(args.force),
+                )
+            )
+            print(json.dumps(rows[-1], default=str), flush=True)
+    ok = sum(1 for r in rows if r.get("status") in ("ok", "exists"))
+    print(json.dumps({"n": len(rows), "ok": ok}, indent=2), file=sys.stderr)
+    return 0 if ok == len(rows) else 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="a4ob", description="alpha4orderbook CLI")
     sub = p.add_subparsers(dest="command", required=True)
@@ -376,6 +402,19 @@ def build_parser() -> argparse.ArgumentParser:
     bc.add_argument("--corr-threshold", type=float, default=None)
     bc.add_argument("--out", default=None, help="default: library/")
     bc.set_defaults(func=_cmd_build_core)
+
+    et = sub.add_parser(
+        "enrich-trades",
+        help="Add NH trades features sidecar next to existing day panels (no book rebuild)",
+    )
+    et.add_argument("--config", default=None)
+    et.add_argument("--symbols", required=True, help="Comma-separated")
+    et.add_argument("--start", required=True)
+    et.add_argument("--end", required=True)
+    et.add_argument("--panels-root", default=None)
+    et.add_argument("--data-root", default=None, help="CryptoHFTData raw root")
+    et.add_argument("--force", action="store_true")
+    et.set_defaults(func=_cmd_enrich_trades)
 
     return p
 

@@ -20,6 +20,7 @@ from ..factors.spec import FactorSpec, FactorStep, load_factor_spec
 from ..labels.forward import mid_forward_returns
 from ..panel.day import default_panels_root, panel_day_dir
 from ..panel.range import iter_dates
+from ..factors.nh_features import join_trades_features
 from .correlate import average_corr_matrices, spearman_corr_matrix
 from .html_leaderboard import write_leaderboard_html
 from .score import load_scoring, score_factor_row
@@ -145,6 +146,10 @@ def rank_universe(
                 failures.append({"symbol": sym, "date": d, "reason": "missing_panel"})
                 continue
             panel = pd.read_parquet(panel_path)
+            # Optional NH trades enrich sidecar (no book rebuild)
+            tfeat = pdir / "trades_features.parquet"
+            if tfeat.is_file():
+                panel = join_trades_features(panel, tfeat)
             # labels once per panel
             horizons = sorted({h for s in specs for h in s.horizons_seconds})
             labels = mid_forward_returns(panel, horizons, price_col="mid", dt_seconds=dt_s)

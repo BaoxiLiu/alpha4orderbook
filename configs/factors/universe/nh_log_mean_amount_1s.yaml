@@ -1,0 +1,29 @@
+# Universe Spec — nh_log_mean_amount_1s
+# Sources: nh_alpha:log_mean_amount_1s
+factor:
+  name: nh_log_mean_amount_1s
+  version: "0.3.0"
+  frequency: 1s
+  description: >
+    NH port via trades_features.parquet (nh_alpha:log_mean_amount_1s)
+
+  output:
+    - col: nh_log_mean_amount_1s
+      dtype: float64
+
+  requires:
+    panel: [ts_ms, mid, best_bid, best_ask, best_bid_sz, best_ask_sz, nh_log_mean_amount_1s]
+
+  steps:
+    - id: nh_log_mean_amount_1s
+      op: from_column
+      params: { col: nh_log_mean_amount_1s, out: nh_log_mean_amount_1s }
+      outputs: [nh_log_mean_amount_1s]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: nh_log_mean_amount_1s

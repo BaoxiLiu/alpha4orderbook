@@ -31,6 +31,11 @@ def orderbook_path(root: Path, symbol: str, key: HourKey) -> Path:
     return root / key.date / key.hour / f"{symbol}_orderbook.parquet"
 
 
+def trades_path(root: Path, symbol: str, key: HourKey) -> Path:
+    """CryptoHFTData ``{SYMBOL}_trades.parquet`` beside the orderbook hour file."""
+    return root / key.date / key.hour / f"{symbol}_trades.parquet"
+
+
 def list_hours(
     root: Path,
     *,

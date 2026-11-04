@@ -1,67 +1,82 @@
-# Core library v0 (expanded universe)
+# Core library v0
 
-- clusters: **59** (threshold |ρ|≥0.7)
-- universe size: **114**
-- representatives (59): `l1_imbalance`, `microprice_mom_10s`, `log_bid_notional_l3`, `log_ask_notional_l3`, `depth_imb_10t`, `bid_touch_share_l10`, `depth_imb_3t_d5s`, `ask_touch_share_l10`, `depth_imb_5bp`, `w1000ms_delta_imbalance_l3`, `cont_ofi_panel_1s`, `w2000ms_ask_l5_change_fraction`, `w3000ms_bid_l5_change_fraction`, `w3000ms_ask_l5_change_fraction`, `w2000ms_bid_l5_change_fraction`, `w1000ms_ask_l5_change_fraction`, `w1000ms_bid_l5_change_fraction`, `bid_outer_share_l5`, `log_bid_touch_back_ratio_l3`, `ask_outer_share_l5`, `log_ask_touch_back_ratio_l3`, `bid_l10_width_ticks`, `w5000ms_delta_bid_outer_share_l5`, `w5000ms_delta_ask_outer_share_l5`, `w1000ms_delta_bid_outer_share_l5`, `w1000ms_delta_ask_outer_share_l5`, `w1000ms_bid_signed_return_bp`, `w2000ms_return_bp`, `ask_l10_width_ticks`, `depth_slope_imb`, `w5000ms_bid_signed_return_bp`, `range_position_60s`, `up_rv_30s`, `w2000ms_spread_change_ticks`, `w1000ms_delta_bid_uniformity_l5`, `w5000ms_delta_bid_uniformity_l5`, `w1000ms_spread_change_ticks`, `ask_hhi_l3`, `bid_hhi_l3`, `w1000ms_delta_ask_uniformity_l5`, `w5000ms_delta_ask_uniformity_l5`, `rv_300s`, `spread_dev_1h`, `w5000ms_realized_vol_bp`, `down_rv_30s`, `rv_ratio_30_300`, `depth_symmetry_l5`, `w2000ms_realized_vol_bp`, `spread_bp`, `hour_sin`, `jump_count_60s`, `log_touch_total_notional`, `w1000ms_delta_depth_symmetry_l10`, `spread_ticks`, `w5000ms_delta_depth_symmetry_l10`, `ask_hhi_l10`, `depth_symmetry_l10`, `bid_uniformity_l10`, `depth_symmetry_l1`
+- clusters: **74** (threshold |ρ|≥0.7)
+- universe size: **165**
+- representatives: `l1_imbalance`, `microprice_mom_10s`, `log_bid_notional_l3`, `log_ask_notional_l3`, `nh_signed_ofi_tanh`, `depth_imb_10t`, `bid_touch_share_l10`, `depth_imb_3t_d5s`, `ask_touch_share_l10`, `depth_imb_5bp`, `w1000ms_delta_imbalance_l3`, `w2000ms_ask_l5_change_fraction`, `w3000ms_bid_l5_change_fraction`, `w3000ms_ask_l5_change_fraction`, `w2000ms_bid_l5_change_fraction`, `w1000ms_ask_l5_change_fraction`, `w1000ms_bid_l5_change_fraction`, `nh_amount_imb_1s`, `bid_outer_share_l5`, `log_bid_touch_back_ratio_l3`, `ask_outer_share_l5`, `log_ask_touch_back_ratio_l3`, `bid_l10_width_ticks`, `w5000ms_delta_bid_outer_share_l5`, `w5000ms_delta_ask_outer_share_l5`, `nh_signed_momentum1`, `w1000ms_delta_bid_outer_share_l5`, `w1000ms_delta_ask_outer_share_l5`, `nh_posret_fraction_1s`, `nh_mean_last_momentum_5s`, `mid_return_1s`, `nh_amount_imb_5s`, `w2000ms_return_bp`, `ask_l10_width_ticks`, `depth_slope_imb`, `nh_posret_fraction_5s`, `range_position_60s`, `up_rv_30s`, `w2000ms_spread_change_ticks`, `w1000ms_delta_bid_uniformity_l5`, `w5000ms_delta_bid_uniformity_l5`, `w1000ms_spread_change_ticks`, `ask_hhi_l3`, `bid_hhi_l3`, `w1000ms_delta_ask_uniformity_l5`, `w5000ms_delta_ask_uniformity_l5`, `rv_300s`, `nh_rv5`, `spread_dev_1h`, `w5000ms_realized_vol_bp`, `nh_log_mean_amount_5s`, `down_rv_30s`, `rv_ratio_30_300`, `depth_symmetry_l5`, `nh_log_mean_amount_1s`, `w2000ms_realized_vol_bp`, `spread_bp`, `hour_sin`, `jump_count_60s`, `log_touch_total_notional`, `nh_log_count1`, `nh_price_cv_bp_1s`, `w1000ms_delta_depth_symmetry_l10`, `nh_signed_vwap1`, `spread_ticks`, `w5000ms_delta_depth_symmetry_l10`, `ask_hhi_l10`, `depth_symmetry_l10`, `bid_uniformity_l10`, `nh_vwap_side_imb_bp_5s`, `depth_symmetry_l1`, `nh_signed_ti_x_distance`, `nh_distance_tick`, `nh_distance_tick_sq`
 
 ## Clusters
 
-- **C0** rep=`l1_imbalance` score=0.7976 · members: l1_imbalance, microprice_spread_frac, microprice_offset_bp, log_bid_notional_l1, log_ask_notional_l1, near_depth_imbalance, imbalance_l3, depth_imb_3t, imbalance_l5
+- **C0** rep=`l1_imbalance` score=0.7976 · members: l1_imbalance, microprice_spread_frac, nh_book_offset_bp, nh_signed_book_offset, microprice_offset_bp, nh_log_order_notional, nh_log_queue_notional, log_bid_notional_l1, log_ask_notional_l1, near_depth_imbalance, imbalance_l3, depth_imb_3t, imbalance_l5
 - **C1** rep=`microprice_mom_10s` score=0.7000 · members: microprice_mom_10s
 - **C2** rep=`log_bid_notional_l3` score=0.6773 · members: log_bid_notional_l3, log_bid_notional_l5, log_bid_notional_l10
 - **C3** rep=`log_ask_notional_l3` score=0.6731 · members: log_ask_notional_l3, log_ask_notional_l5, log_ask_notional_l10
-- **C4** rep=`depth_imb_10t` score=0.6679 · members: depth_imb_10t, imbalance_l10
-- **C5** rep=`bid_touch_share_l10` score=0.6667 · members: bid_touch_share_l10, log_bid_touch_back_ratio_l10, bid_outer_share_l10, log_bid_touch_back_ratio_l5
-- **C6** rep=`depth_imb_3t_d5s` score=0.6620 · members: depth_imb_3t_d5s, w5000ms_delta_imbalance_l3, w5000ms_delta_log_bid_notional_l3, w5000ms_delta_log_ask_notional_l3
-- **C7** rep=`ask_touch_share_l10` score=0.6580 · members: ask_touch_share_l10, log_ask_touch_back_ratio_l10, ask_outer_share_l10, log_ask_touch_back_ratio_l5
-- **C8** rep=`depth_imb_5bp` score=0.6474 · members: depth_imb_5bp, depth_imb_10bp
-- **C9** rep=`w1000ms_delta_imbalance_l3` score=0.6404 · members: w1000ms_delta_imbalance_l3, w1000ms_delta_log_ask_notional_l3, w1000ms_delta_log_bid_notional_l3
-- **C10** rep=`cont_ofi_panel_1s` score=0.6402 · members: cont_ofi_panel_1s
+- **C4** rep=`nh_signed_ofi_tanh` score=0.6691 · members: nh_signed_ofi_tanh, nh_ofi_original_tanh, cont_ofi_panel_1s
+- **C5** rep=`depth_imb_10t` score=0.6679 · members: depth_imb_10t, imbalance_l10
+- **C6** rep=`bid_touch_share_l10` score=0.6667 · members: bid_touch_share_l10, log_bid_touch_back_ratio_l10, bid_outer_share_l10, log_bid_touch_back_ratio_l5
+- **C7** rep=`depth_imb_3t_d5s` score=0.6620 · members: depth_imb_3t_d5s, w5000ms_delta_imbalance_l3, w5000ms_delta_log_bid_notional_l3, w5000ms_delta_log_ask_notional_l3
+- **C8** rep=`ask_touch_share_l10` score=0.6580 · members: ask_touch_share_l10, log_ask_touch_back_ratio_l10, ask_outer_share_l10, log_ask_touch_back_ratio_l5
+- **C9** rep=`depth_imb_5bp` score=0.6474 · members: depth_imb_5bp, depth_imb_10bp
+- **C10** rep=`w1000ms_delta_imbalance_l3` score=0.6404 · members: w1000ms_delta_imbalance_l3, w1000ms_delta_log_ask_notional_l3, w1000ms_delta_log_bid_notional_l3
 - **C11** rep=`w2000ms_ask_l5_change_fraction` score=0.6201 · members: w2000ms_ask_l5_change_fraction
 - **C12** rep=`w3000ms_bid_l5_change_fraction` score=0.6200 · members: w3000ms_bid_l5_change_fraction
 - **C13** rep=`w3000ms_ask_l5_change_fraction` score=0.6172 · members: w3000ms_ask_l5_change_fraction
 - **C14** rep=`w2000ms_bid_l5_change_fraction` score=0.6156 · members: w2000ms_bid_l5_change_fraction
 - **C15** rep=`w1000ms_ask_l5_change_fraction` score=0.6048 · members: w1000ms_ask_l5_change_fraction
 - **C16** rep=`w1000ms_bid_l5_change_fraction` score=0.6037 · members: w1000ms_bid_l5_change_fraction
-- **C17** rep=`bid_outer_share_l5` score=0.5757 · members: bid_outer_share_l5, bid_outer_share_l3
-- **C18** rep=`log_bid_touch_back_ratio_l3` score=0.5688 · members: log_bid_touch_back_ratio_l3
-- **C19** rep=`ask_outer_share_l5` score=0.5662 · members: ask_outer_share_l5, ask_outer_share_l3
-- **C20** rep=`log_ask_touch_back_ratio_l3` score=0.5654 · members: log_ask_touch_back_ratio_l3
-- **C21** rep=`bid_l10_width_ticks` score=0.5654 · members: bid_l10_width_ticks
-- **C22** rep=`w5000ms_delta_bid_outer_share_l5` score=0.5538 · members: w5000ms_delta_bid_outer_share_l5
-- **C23** rep=`w5000ms_delta_ask_outer_share_l5` score=0.5538 · members: w5000ms_delta_ask_outer_share_l5
-- **C24** rep=`w1000ms_delta_bid_outer_share_l5` score=0.5394 · members: w1000ms_delta_bid_outer_share_l5
-- **C25** rep=`w1000ms_delta_ask_outer_share_l5` score=0.5354 · members: w1000ms_delta_ask_outer_share_l5
-- **C26** rep=`w1000ms_bid_signed_return_bp` score=0.5167 · members: w1000ms_bid_signed_return_bp, mid_return_1s
-- **C27** rep=`w2000ms_return_bp` score=0.4992 · members: w2000ms_return_bp, w3000ms_return_bp
-- **C28** rep=`ask_l10_width_ticks` score=0.4984 · members: ask_l10_width_ticks
-- **C29** rep=`depth_slope_imb` score=0.4922 · members: depth_slope_imb
-- **C30** rep=`w5000ms_bid_signed_return_bp` score=0.4805 · members: w5000ms_bid_signed_return_bp, ret_5s_bp
-- **C31** rep=`range_position_60s` score=0.4652 · members: range_position_60s, w30000ms_bid_signed_return_bp, ret_30s_bp, signed_semivar_30s, ret_60s_bp
-- **C32** rep=`up_rv_30s` score=0.4269 · members: up_rv_30s, w30000ms_realized_vol_bp, rv_30s
-- **C33** rep=`w2000ms_spread_change_ticks` score=0.4157 · members: w2000ms_spread_change_ticks, w3000ms_spread_change_ticks
-- **C34** rep=`w1000ms_delta_bid_uniformity_l5` score=0.4156 · members: w1000ms_delta_bid_uniformity_l5, w1000ms_delta_bid_hhi_l5
-- **C35** rep=`w5000ms_delta_bid_uniformity_l5` score=0.4155 · members: w5000ms_delta_bid_uniformity_l5, w5000ms_delta_bid_hhi_l5
-- **C36** rep=`w1000ms_spread_change_ticks` score=0.4140 · members: w1000ms_spread_change_ticks
-- **C37** rep=`ask_hhi_l3` score=0.4059 · members: ask_hhi_l3, ask_uniformity_l3, ask_uniformity_l5, ask_hhi_l5
-- **C38** rep=`bid_hhi_l3` score=0.4054 · members: bid_hhi_l3, bid_uniformity_l3, bid_hhi_l5, bid_uniformity_l5
-- **C39** rep=`w1000ms_delta_ask_uniformity_l5` score=0.3973 · members: w1000ms_delta_ask_uniformity_l5, w1000ms_delta_ask_hhi_l5
-- **C40** rep=`w5000ms_delta_ask_uniformity_l5` score=0.3910 · members: w5000ms_delta_ask_uniformity_l5, w5000ms_delta_ask_hhi_l5
-- **C41** rep=`rv_300s` score=0.3711 · members: rv_300s, rv_60s, rv_60s_bp2
-- **C42** rep=`spread_dev_1h` score=0.3669 · members: spread_dev_1h
-- **C43** rep=`w5000ms_realized_vol_bp` score=0.3633 · members: w5000ms_realized_vol_bp, w3000ms_realized_vol_bp
-- **C44** rep=`down_rv_30s` score=0.3530 · members: down_rv_30s
-- **C45** rep=`rv_ratio_30_300` score=0.3502 · members: rv_ratio_30_300
-- **C46** rep=`depth_symmetry_l5` score=0.3468 · members: depth_symmetry_l5, depth_symmetry_l3
-- **C47** rep=`w2000ms_realized_vol_bp` score=0.3374 · members: w2000ms_realized_vol_bp, w1000ms_realized_vol_bp
-- **C48** rep=`spread_bp` score=0.3322 · members: spread_bp
-- **C49** rep=`hour_sin` score=0.3234 · members: hour_sin, hour_cos
-- **C50** rep=`jump_count_60s` score=0.3194 · members: jump_count_60s
-- **C51** rep=`log_touch_total_notional` score=0.2877 · members: log_touch_total_notional
-- **C52** rep=`w1000ms_delta_depth_symmetry_l10` score=0.2624 · members: w1000ms_delta_depth_symmetry_l10
-- **C53** rep=`spread_ticks` score=0.2394 · members: spread_ticks
-- **C54** rep=`w5000ms_delta_depth_symmetry_l10` score=0.2328 · members: w5000ms_delta_depth_symmetry_l10
-- **C55** rep=`ask_hhi_l10` score=0.2302 · members: ask_hhi_l10, ask_uniformity_l10
-- **C56** rep=`depth_symmetry_l10` score=0.2202 · members: depth_symmetry_l10
-- **C57** rep=`bid_uniformity_l10` score=0.2118 · members: bid_uniformity_l10, bid_hhi_l10
-- **C58** rep=`depth_symmetry_l1` score=0.1952 · members: depth_symmetry_l1
+- **C17** rep=`nh_amount_imb_1s` score=0.5917 · members: nh_amount_imb_1s, nh_signed_amount1, nh_volume_imb_1s, nh_ti_1s, nh_signed_volume1, nh_signed_ti, nh_signed_count1, nh_count_imb_1s
+- **C18** rep=`bid_outer_share_l5` score=0.5757 · members: bid_outer_share_l5, bid_outer_share_l3
+- **C19** rep=`log_bid_touch_back_ratio_l3` score=0.5688 · members: log_bid_touch_back_ratio_l3
+- **C20** rep=`ask_outer_share_l5` score=0.5662 · members: ask_outer_share_l5, ask_outer_share_l3
+- **C21** rep=`log_ask_touch_back_ratio_l3` score=0.5654 · members: log_ask_touch_back_ratio_l3
+- **C22** rep=`bid_l10_width_ticks` score=0.5654 · members: bid_l10_width_ticks
+- **C23** rep=`w5000ms_delta_bid_outer_share_l5` score=0.5538 · members: w5000ms_delta_bid_outer_share_l5
+- **C24** rep=`w5000ms_delta_ask_outer_share_l5` score=0.5538 · members: w5000ms_delta_ask_outer_share_l5
+- **C25** rep=`nh_signed_momentum1` score=0.5434 · members: nh_signed_momentum1, nh_mean_last_momentum_1s
+- **C26** rep=`w1000ms_delta_bid_outer_share_l5` score=0.5394 · members: w1000ms_delta_bid_outer_share_l5
+- **C27** rep=`w1000ms_delta_ask_outer_share_l5` score=0.5354 · members: w1000ms_delta_ask_outer_share_l5
+- **C28** rep=`nh_posret_fraction_1s` score=0.5295 · members: nh_posret_fraction_1s
+- **C29** rep=`nh_mean_last_momentum_5s` score=0.5233 · members: nh_mean_last_momentum_5s, nh_signed_momentum5, w3000ms_return_bp, ret_5s_bp, w5000ms_bid_signed_return_bp
+- **C30** rep=`mid_return_1s` score=0.5167 · members: mid_return_1s, w1000ms_bid_signed_return_bp
+- **C31** rep=`nh_amount_imb_5s` score=0.5066 · members: nh_amount_imb_5s, nh_signed_amount5, nh_volume_imb_5s, nh_signed_volume5, nh_count_imb_5s, nh_signed_count5
+- **C32** rep=`w2000ms_return_bp` score=0.4992 · members: w2000ms_return_bp
+- **C33** rep=`ask_l10_width_ticks` score=0.4984 · members: ask_l10_width_ticks
+- **C34** rep=`depth_slope_imb` score=0.4922 · members: depth_slope_imb
+- **C35** rep=`nh_posret_fraction_5s` score=0.4746 · members: nh_posret_fraction_5s
+- **C36** rep=`range_position_60s` score=0.4652 · members: range_position_60s, w30000ms_bid_signed_return_bp, ret_30s_bp, signed_semivar_30s, ret_60s_bp
+- **C37** rep=`up_rv_30s` score=0.4269 · members: up_rv_30s, rv_30s, w30000ms_realized_vol_bp
+- **C38** rep=`w2000ms_spread_change_ticks` score=0.4157 · members: w2000ms_spread_change_ticks, w3000ms_spread_change_ticks
+- **C39** rep=`w1000ms_delta_bid_uniformity_l5` score=0.4156 · members: w1000ms_delta_bid_uniformity_l5, w1000ms_delta_bid_hhi_l5
+- **C40** rep=`w5000ms_delta_bid_uniformity_l5` score=0.4155 · members: w5000ms_delta_bid_uniformity_l5, w5000ms_delta_bid_hhi_l5
+- **C41** rep=`w1000ms_spread_change_ticks` score=0.4140 · members: w1000ms_spread_change_ticks
+- **C42** rep=`ask_hhi_l3` score=0.4059 · members: ask_hhi_l3, ask_uniformity_l3, ask_uniformity_l5, ask_hhi_l5
+- **C43** rep=`bid_hhi_l3` score=0.4054 · members: bid_hhi_l3, bid_uniformity_l3, bid_hhi_l5, bid_uniformity_l5
+- **C44** rep=`w1000ms_delta_ask_uniformity_l5` score=0.3973 · members: w1000ms_delta_ask_uniformity_l5, w1000ms_delta_ask_hhi_l5
+- **C45** rep=`w5000ms_delta_ask_uniformity_l5` score=0.3910 · members: w5000ms_delta_ask_uniformity_l5, w5000ms_delta_ask_hhi_l5
+- **C46** rep=`rv_300s` score=0.3711 · members: rv_300s, rv_60s, rv_60s_bp2
+- **C47** rep=`nh_rv5` score=0.3693 · members: nh_rv5, nh_trade_rv_bp_5s, nh_price_cv_bp_5s
+- **C48** rep=`spread_dev_1h` score=0.3669 · members: spread_dev_1h
+- **C49** rep=`w5000ms_realized_vol_bp` score=0.3633 · members: w5000ms_realized_vol_bp, nh_log_count_rate_5s, nh_log_count5, w3000ms_realized_vol_bp
+- **C50** rep=`nh_log_mean_amount_5s` score=0.3548 · members: nh_log_mean_amount_5s, nh_log_amount5
+- **C51** rep=`down_rv_30s` score=0.3530 · members: down_rv_30s
+- **C52** rep=`rv_ratio_30_300` score=0.3502 · members: rv_ratio_30_300
+- **C53** rep=`depth_symmetry_l5` score=0.3468 · members: depth_symmetry_l5, depth_symmetry_l3
+- **C54** rep=`nh_log_mean_amount_1s` score=0.3414 · members: nh_log_mean_amount_1s, nh_log_amount1
+- **C55** rep=`w2000ms_realized_vol_bp` score=0.3374 · members: w2000ms_realized_vol_bp, w1000ms_realized_vol_bp
+- **C56** rep=`spread_bp` score=0.3322 · members: spread_bp, nh_distance_bp, nh_spread_bp, nh_tick_bp
+- **C57** rep=`hour_sin` score=0.3234 · members: hour_sin, hour_cos
+- **C58** rep=`jump_count_60s` score=0.3194 · members: jump_count_60s
+- **C59** rep=`log_touch_total_notional` score=0.2877 · members: log_touch_total_notional
+- **C60** rep=`nh_log_count1` score=0.2685 · members: nh_log_count1, nh_log_count_rate_1s
+- **C61** rep=`nh_price_cv_bp_1s` score=0.2675 · members: nh_price_cv_bp_1s, nh_vol_1s, nh_rv1, nh_trade_rv_bp_1s
+- **C62** rep=`w1000ms_delta_depth_symmetry_l10` score=0.2624 · members: w1000ms_delta_depth_symmetry_l10
+- **C63** rep=`nh_signed_vwap1` score=0.2555 · members: nh_signed_vwap1, nh_vwap_side_imb_bp_1s
+- **C64** rep=`spread_ticks` score=0.2394 · members: spread_ticks
+- **C65** rep=`w5000ms_delta_depth_symmetry_l10` score=0.2328 · members: w5000ms_delta_depth_symmetry_l10
+- **C66** rep=`ask_hhi_l10` score=0.2302 · members: ask_hhi_l10, ask_uniformity_l10
+- **C67** rep=`depth_symmetry_l10` score=0.2202 · members: depth_symmetry_l10
+- **C68** rep=`bid_uniformity_l10` score=0.2118 · members: bid_uniformity_l10, bid_hhi_l10
+- **C69** rep=`nh_vwap_side_imb_bp_5s` score=0.2116 · members: nh_vwap_side_imb_bp_5s, nh_signed_vwap5
+- **C70** rep=`depth_symmetry_l1` score=0.1952 · members: depth_symmetry_l1
+- **C71** rep=`nh_signed_ti_x_distance` score=0.0409 · members: nh_signed_ti_x_distance
+- **C72** rep=`nh_distance_tick` score=0.0378 · members: nh_distance_tick
+- **C73** rep=`nh_distance_tick_sq` score=0.0378 · members: nh_distance_tick_sq

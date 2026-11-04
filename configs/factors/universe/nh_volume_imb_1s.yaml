@@ -1,0 +1,29 @@
+# Universe Spec — nh_volume_imb_1s
+# Sources: nh_alpha:volume_imb_1s
+factor:
+  name: nh_volume_imb_1s
+  version: "0.3.0"
+  frequency: 1s
+  description: >
+    NH port via trades_features.parquet (nh_alpha:volume_imb_1s)
+
+  output:
+    - col: nh_volume_imb_1s
+      dtype: float64
+
+  requires:
+    panel: [ts_ms, mid, best_bid, best_ask, best_bid_sz, best_ask_sz, nh_volume_imb_1s]
+
+  steps:
+    - id: nh_volume_imb_1s
+      op: from_column
+      params: { col: nh_volume_imb_1s, out: nh_volume_imb_1s }
+      outputs: [nh_volume_imb_1s]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: nh_volume_imb_1s

@@ -1,0 +1,29 @@
+# Universe Spec — nh_log_order_notional
+# Sources: nh_value:log_order_notional
+factor:
+  name: nh_log_order_notional
+  version: "0.3.0"
+  frequency: 1s
+  description: >
+    NH port via trades_features.parquet (nh_value:log_order_notional)
+
+  output:
+    - col: nh_log_order_notional
+      dtype: float64
+
+  requires:
+    panel: [ts_ms, mid, best_bid, best_ask, best_bid_sz, best_ask_sz, nh_log_order_notional]
+
+  steps:
+    - id: nh_log_order_notional
+      op: from_column
+      params: { col: nh_log_order_notional, out: nh_log_order_notional }
+      outputs: [nh_log_order_notional]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: nh_log_order_notional

@@ -1,0 +1,29 @@
+# Universe Spec — nh_posret_fraction_5s
+# Sources: nh_alpha:posret_fraction_5s
+factor:
+  name: nh_posret_fraction_5s
+  version: "0.3.0"
+  frequency: 1s
+  description: >
+    NH port via trades_features.parquet (nh_alpha:posret_fraction_5s)
+
+  output:
+    - col: nh_posret_fraction_5s
+      dtype: float64
+
+  requires:
+    panel: [ts_ms, mid, best_bid, best_ask, best_bid_sz, best_ask_sz, nh_posret_fraction_5s]
+
+  steps:
+    - id: nh_posret_fraction_5s
+      op: from_column
+      params: { col: nh_posret_fraction_5s, out: nh_posret_fraction_5s }
+      outputs: [nh_posret_fraction_5s]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: nh_posret_fraction_5s

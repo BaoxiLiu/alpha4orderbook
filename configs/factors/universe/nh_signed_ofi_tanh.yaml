@@ -1,0 +1,29 @@
+# Universe Spec — nh_signed_ofi_tanh
+# Sources: nh_value:signed_ofi_tanh
+factor:
+  name: nh_signed_ofi_tanh
+  version: "0.3.0"
+  frequency: 1s
+  description: >
+    NH port via trades_features.parquet (nh_value:signed_ofi_tanh)
+
+  output:
+    - col: nh_signed_ofi_tanh
+      dtype: float64
+
+  requires:
+    panel: [ts_ms, mid, best_bid, best_ask, best_bid_sz, best_ask_sz, nh_signed_ofi_tanh]
+
+  steps:
+    - id: nh_signed_ofi_tanh
+      op: from_column
+      params: { col: nh_signed_ofi_tanh, out: nh_signed_ofi_tanh }
+      outputs: [nh_signed_ofi_tanh]
+
+  labels:
+    price: mid
+    horizons_seconds: [1, 5, 10, 30, 60, 300]
+
+  eval:
+    metrics: [rank_ic, coverage, ic_decay]
+    primary_factor: nh_signed_ofi_tanh
