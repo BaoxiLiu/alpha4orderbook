@@ -1,0 +1,41 @@
+# Universe Spec — stx_pos_jump_ret_1200s
+# Sources: stx_md:清单_圣堂雪因子.md
+factor:
+  name: stx_pos_jump_ret_1200s
+  version: 0.5.0
+  frequency: 1s
+  description: 圣堂雪#14 positive jump mid-return sum 1200s (panel)
+  output:
+  - col: stx_pos_jump_ret_1200s
+    dtype: float64
+  requires:
+    panel:
+    - mid
+    - spread
+    - best_bid
+    - best_ask
+    - best_bid_sz
+    - best_ask_sz
+  steps:
+  - id: stx_pos_jump_ret_1200s
+    op: stx_pos_jump_ret
+    params:
+      lookback: 300
+      out: stx_pos_jump_ret_1200s
+    outputs:
+    - stx_pos_jump_ret_1200s
+  labels:
+    price: mid
+    horizons_seconds:
+    - 1
+    - 5
+    - 10
+    - 30
+    - 60
+    - 300
+  eval:
+    metrics:
+    - rank_ic
+    - coverage
+    - ic_decay
+    primary_factor: stx_pos_jump_ret_1200s

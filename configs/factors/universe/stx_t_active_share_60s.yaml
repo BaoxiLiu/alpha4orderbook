@@ -1,0 +1,43 @@
+# Universe Spec — stx_t_active_share_60s
+# Sources: stx_md:清单_圣堂雪因子.md
+factor:
+  name: stx_t_active_share_60s
+  version: 0.5.0
+  frequency: 1s
+  description: 圣堂雪#29 t-density×amount share (book+trades)
+  output:
+  - col: stx_t_active_share_60s
+    dtype: float64
+  requires:
+    panel:
+    - mid
+    - nh_vol_1s
+    - spread
+    - best_bid
+    - best_ask
+    - best_bid_sz
+    - best_ask_sz
+  steps:
+  - id: stx_t_active_share_60s
+    op: stx_t_active_share
+    params:
+      window: 60
+      df: 5.0
+      out: stx_t_active_share_60s
+    outputs:
+    - stx_t_active_share_60s
+  labels:
+    price: mid
+    horizons_seconds:
+    - 1
+    - 5
+    - 10
+    - 30
+    - 60
+    - 300
+  eval:
+    metrics:
+    - rank_ic
+    - coverage
+    - ic_decay
+    primary_factor: stx_t_active_share_60s

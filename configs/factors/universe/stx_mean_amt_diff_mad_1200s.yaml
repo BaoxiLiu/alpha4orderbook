@@ -1,0 +1,44 @@
+# Universe Spec — stx_mean_amt_diff_mad_1200s
+# Sources: stx_md:清单_圣堂雪因子.md
+factor:
+  name: stx_mean_amt_diff_mad_1200s
+  version: 0.5.0
+  frequency: 1s
+  description: 圣堂雪#37 mean |Δ mean-trade-amount| relative (book+trades)
+  output:
+  - col: stx_mean_amt_diff_mad_1200s
+    dtype: float64
+  requires:
+    panel:
+    - mid
+    - nh_log_mean_amount_1s
+    - nh_log_count1
+    - nh_log_amount1
+    - spread
+    - best_bid
+    - best_ask
+    - best_bid_sz
+    - best_ask_sz
+  steps:
+  - id: stx_mean_amt_diff_mad_1200s
+    op: stx_mean_amt_diff_mad
+    params:
+      lookback: 300
+      out: stx_mean_amt_diff_mad_1200s
+    outputs:
+    - stx_mean_amt_diff_mad_1200s
+  labels:
+    price: mid
+    horizons_seconds:
+    - 1
+    - 5
+    - 10
+    - 30
+    - 60
+    - 300
+  eval:
+    metrics:
+    - rank_ic
+    - coverage
+    - ic_decay
+    primary_factor: stx_mean_amt_diff_mad_1200s

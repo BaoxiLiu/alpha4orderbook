@@ -18,6 +18,7 @@ from .catalog_nine import (
     op_spread_bp,
 )
 from .panel_batch import BATCH_OPS
+from .stx_features import STX_OPS
 
 
 # ---- safe expression eval (names → columns) ---------------------------------
@@ -152,3 +153,5 @@ OPS = {
 }
 # Dual-library Phase 1 panel batch ops (imbalance_levels, ret_bp, rv, depth, …)
 OPS.update(BATCH_OPS)
+# 圣堂雪 MD intake (panel / book+trades adaptations)
+OPS.update(STX_OPS)

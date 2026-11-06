@@ -1,0 +1,42 @@
+# Universe Spec — stx_vol_peak_count_1200s
+# Sources: stx_md:清单_圣堂雪因子.md
+factor:
+  name: stx_vol_peak_count_1200s
+  version: 0.5.0
+  frequency: 1s
+  description: 圣堂雪#8/#11 volume peak count rolling 1200s (book+trades)
+  output:
+  - col: stx_vol_peak_count_1200s
+    dtype: float64
+  requires:
+    panel:
+    - mid
+    - nh_vol_1s
+    - spread
+    - best_bid
+    - best_ask
+    - best_bid_sz
+    - best_ask_sz
+  steps:
+  - id: stx_vol_peak_count_1200s
+    op: stx_vol_peak_count
+    params:
+      lookback: 300
+      out: stx_vol_peak_count_1200s
+    outputs:
+    - stx_vol_peak_count_1200s
+  labels:
+    price: mid
+    horizons_seconds:
+    - 1
+    - 5
+    - 10
+    - 30
+    - 60
+    - 300
+  eval:
+    metrics:
+    - rank_ic
+    - coverage
+    - ic_decay
+    primary_factor: stx_vol_peak_count_1200s

@@ -1,0 +1,41 @@
+# Universe Spec — stx_rtv_60s
+# Sources: stx_md:清单_圣堂雪因子.md
+factor:
+  name: stx_rtv_60s
+  version: 0.5.0
+  frequency: 1s
+  description: 圣堂雪#25 realized tripower variation proxy 60s (panel)
+  output:
+  - col: stx_rtv_60s
+    dtype: float64
+  requires:
+    panel:
+    - mid
+    - spread
+    - best_bid
+    - best_ask
+    - best_bid_sz
+    - best_ask_sz
+  steps:
+  - id: stx_rtv_60s
+    op: stx_rtv
+    params:
+      window: 60
+      out: stx_rtv_60s
+    outputs:
+    - stx_rtv_60s
+  labels:
+    price: mid
+    horizons_seconds:
+    - 1
+    - 5
+    - 10
+    - 30
+    - 60
+    - 300
+  eval:
+    metrics:
+    - rank_ic
+    - coverage
+    - ic_decay
+    primary_factor: stx_rtv_60s

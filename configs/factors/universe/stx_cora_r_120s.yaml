@@ -1,0 +1,43 @@
+# Universe Spec — stx_cora_r_120s
+# Sources: stx_md:清单_圣堂雪因子.md
+factor:
+  name: stx_cora_r_120s
+  version: 0.5.0
+  frequency: 1s
+  description: 圣堂雪#34 CORA_R corr(|ret_lag|,amount) 120s (book+trades)
+  output:
+  - col: stx_cora_r_120s
+    dtype: float64
+  requires:
+    panel:
+    - mid
+    - nh_log_amount1
+    - nh_vol_1s
+    - spread
+    - best_bid
+    - best_ask
+    - best_bid_sz
+    - best_ask_sz
+  steps:
+  - id: stx_cora_r_120s
+    op: stx_cora_r
+    params:
+      window: 300
+      out: stx_cora_r_120s
+    outputs:
+    - stx_cora_r_120s
+  labels:
+    price: mid
+    horizons_seconds:
+    - 1
+    - 5
+    - 10
+    - 30
+    - 60
+    - 300
+  eval:
+    metrics:
+    - rank_ic
+    - coverage
+    - ic_decay
+    primary_factor: stx_cora_r_120s

@@ -1,0 +1,61 @@
+# Universe Spec — stx_mlqs_l5
+# Sources: stx_md:清单_圣堂雪因子.md
+factor:
+  name: stx_mlqs_l5
+  version: 0.5.0
+  frequency: 1s
+  description: 圣堂雪#31 MLQS weighted LogQuoteSlope L1-5 (panel)
+  output:
+  - col: stx_mlqs_l5
+    dtype: float64
+  requires:
+    panel:
+    - mid
+    - bid_px_0
+    - ask_px_0
+    - bid_sz_0
+    - ask_sz_0
+    - bid_px_1
+    - ask_px_1
+    - bid_sz_1
+    - ask_sz_1
+    - bid_px_2
+    - ask_px_2
+    - bid_sz_2
+    - ask_sz_2
+    - bid_px_3
+    - ask_px_3
+    - bid_sz_3
+    - ask_sz_3
+    - bid_px_4
+    - ask_px_4
+    - bid_sz_4
+    - ask_sz_4
+    - spread
+    - best_bid
+    - best_ask
+    - best_bid_sz
+    - best_ask_sz
+  steps:
+  - id: stx_mlqs_l5
+    op: stx_mlqs
+    params:
+      levels: 5
+      out: stx_mlqs_l5
+    outputs:
+    - stx_mlqs_l5
+  labels:
+    price: mid
+    horizons_seconds:
+    - 1
+    - 5
+    - 10
+    - 30
+    - 60
+    - 300
+  eval:
+    metrics:
+    - rank_ic
+    - coverage
+    - ic_decay
+    primary_factor: stx_mlqs_l5

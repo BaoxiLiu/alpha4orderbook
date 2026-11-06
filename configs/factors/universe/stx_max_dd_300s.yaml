@@ -1,0 +1,41 @@
+# Universe Spec — stx_max_dd_300s
+# Sources: stx_md:清单_圣堂雪因子.md
+factor:
+  name: stx_max_dd_300s
+  version: 0.5.0
+  frequency: 1s
+  description: 圣堂雪#23 rolling mid max drawdown 300s (panel)
+  output:
+  - col: stx_max_dd_300s
+    dtype: float64
+  requires:
+    panel:
+    - mid
+    - spread
+    - best_bid
+    - best_ask
+    - best_bid_sz
+    - best_ask_sz
+  steps:
+  - id: stx_max_dd_300s
+    op: stx_max_dd
+    params:
+      window: 300
+      out: stx_max_dd_300s
+    outputs:
+    - stx_max_dd_300s
+  labels:
+    price: mid
+    horizons_seconds:
+    - 1
+    - 5
+    - 10
+    - 30
+    - 60
+    - 300
+  eval:
+    metrics:
+    - rank_ic
+    - coverage
+    - ic_decay
+    primary_factor: stx_max_dd_300s

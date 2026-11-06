@@ -1,0 +1,43 @@
+# Universe Spec — stx_amp_cut_600s
+# Sources: stx_md:清单_圣堂雪因子.md
+factor:
+  name: stx_amp_cut_600s
+  version: 0.5.0
+  frequency: 1s
+  description: 圣堂雪#42 intraday amplitude cut (panel)
+  output:
+  - col: stx_amp_cut_600s
+    dtype: float64
+  requires:
+    panel:
+    - mid
+    - spread
+    - best_bid
+    - best_ask
+    - best_bid_sz
+    - best_ask_sz
+  steps:
+  - id: stx_amp_cut_600s
+    op: stx_amp_cut
+    params:
+      lookback: 600
+      bar: 60
+      lam: 0.8
+      out: stx_amp_cut_600s
+    outputs:
+    - stx_amp_cut_600s
+  labels:
+    price: mid
+    horizons_seconds:
+    - 1
+    - 5
+    - 10
+    - 30
+    - 60
+    - 300
+  eval:
+    metrics:
+    - rank_ic
+    - coverage
+    - ic_decay
+    primary_factor: stx_amp_cut_600s
